@@ -14,4 +14,9 @@ fi
 
 bash install.sh --status >/dev/null
 
+if ! grep -q '/opt/antigravity.new' install.sh || ! grep -q '/opt/antigravity-ide.new' install.sh; then
+  echo "install.sh uninstall must remove interrupted .new staging directories." >&2
+  exit 1
+fi
+
 echo "All checks passed."

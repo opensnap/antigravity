@@ -344,6 +344,9 @@
           <a href="#update" class="hover:text-white transition-colors"
             >Updates</a
           >
+          <a href="#manage" class="hover:text-white transition-colors"
+            >Manage</a
+          >
           <a href="#security" class="hover:text-white transition-colors"
             >Security</a
           >
@@ -404,7 +407,12 @@
                 </svg>
                 Get the command
               </a>
-              <a href="https://github.com/opensnap/antigravity" class="btn-ghost" target="_blank">View source</a>
+              <a href="https://github.com/opensnap/antigravity" class="btn-ghost flex flex-wrap gap-4" target="_blank">
+                  <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                  View source
+              </a>
             </div>
           </div>
 
@@ -559,9 +567,9 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
                 ><span class="syn-var">INSTALLER_URL</span>=<span
                   class="syn-str"
                   >"https://opensnap.github.io/antigravity/install.sh"</span
-                >
+                ><br />
                 curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo
-                -E env
+                -E env<br />
                 <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span
                 >=<span class="syn-str">"$INSTALLER_URL"</span> bash -s --
                 <span class="syn-arg">--all</span></code
@@ -574,7 +582,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               <div>
                 <h3 class="font-semibold mb-3 flex items-center gap-2 text-white">
                   <span class="w-2 h-2 rounded-full bg-slate-600"></span>
-                  Desktop app only
+                  Desktop app (Agent) only
                 </h3>
                 <div class="code-block">
                   <div
@@ -593,9 +601,9 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
                   </div>
                   <div class="code-content font-mono text-xs text-slate-300">
                     <code
-                      >curl -fsSL
-                      <span class="syn-str">"$INSTALLER_URL"</span> | sudo bash
-                      -s --</code
+                      ><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />
+                      curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env<br />
+                      <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s --</code
                     >
                   </div>
                 </div>
@@ -621,14 +629,41 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
                   </div>
                   <div class="code-content font-mono text-xs text-slate-300">
                     <code
-                      >curl -fsSL
-                      <span class="syn-str">"$INSTALLER_URL"</span> | sudo bash
-                      -s -- <span class="syn-arg">--ide</span></code
+                      ><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />
+                      curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env<br />
+                      <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--ide</span></code
                     >
                   </div>
                 </div>
               </div>
             </div>
+
+
+          <div class="mt-8 pt-8 border-t border-slate-700">
+            <h3 class="font-semibold mb-3 flex items-center gap-2 text-white">
+              <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+              Raw GitHub installer
+            </h3>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="text-xs text-slate-400 font-mono">raw.githubusercontent.com</span>
+                <button
+                  class="btn-copy"
+                  data-copy='INSTALLER_URL="https://raw.githubusercontent.com/opensnap/antigravity/main/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'
+                >
+                  Copy
+                </button>
+              </div>
+              <div class="code-content font-mono text-slate-300 text-sm">
+                <code
+                  ><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://raw.githubusercontent.com/opensnap/antigravity/main/install.sh"</span><br />
+                  curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env<br />
+                  <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--all</span></code
+                >
+              </div>
+            </div>
+          </div>
           </div>
         </section>
 
@@ -664,11 +699,98 @@ sudo update-antigravity-ide"
                 </div>
                 <div class="code-content font-mono text-slate-300 text-sm">
                   <code
-                    ><span class="syn-cmd">sudo</span> antigravity-linux update
-                    <span class="syn-arg">--all</span>
-                    <span class="syn-cmd">sudo</span> update-antigravity
-                    <span class="syn-cmd">sudo</span>
-                    update-antigravity-ide</code
+                    ><span class="syn-cmd">sudo</span> antigravity-linux update <span class="syn-arg">--all</span><br />
+                    <span class="syn-cmd">sudo</span> update-antigravity<br />
+                    <span class="syn-cmd">sudo</span> update-antigravity-ide</code
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+
+        <!-- Manage section -->
+        <section id="manage" class="section-card p-8 reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <span
+              class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
+              >Manage</span
+            >
+            <div class="flex-1 h-px bg-slate-700"></div>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-8">
+            <div>
+              <h2 class="text-3xl font-bold mb-3 text-white">Status and uninstall</h2>
+              <p class="text-slate-400 leading-relaxed mb-6">
+                URL-based installs can use the helper command. Local checkout installs can run the same script directly.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="text-xs text-slate-400 font-mono">lifecycle</span>
+                  <button
+                    class="btn-copy"
+                    data-copy="antigravity-linux --status
+sudo antigravity-linux --uninstall
+bash install.sh --status
+sudo bash install.sh --uninstall"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <div class="code-content font-mono text-slate-300 text-sm">
+                  <code
+                    >antigravity-linux <span class="syn-arg">--status</span><br />
+                    <span class="syn-cmd">sudo</span> antigravity-linux <span class="syn-arg">--uninstall</span><br />
+                    bash install.sh <span class="syn-arg">--status</span><br />
+                    <span class="syn-cmd">sudo</span> bash install.sh <span class="syn-arg">--uninstall</span></code
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 class="text-3xl font-bold mb-3 text-white">Installer options</h2>
+              <p class="text-slate-400 leading-relaxed mb-6">
+                The helper can print resolved downloads, skip integrations, force reinstalls, and store a specific update URL.
+              </p>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="text-xs text-slate-400 font-mono">options</span>
+                  <button
+                    class="btn-copy"
+                    data-copy="--desktop
+--ide
+--all
+--cli
+--no-nautilus
+--no-apt
+--force
+--install-url URL
+--status
+--print-downloads
+--uninstall
+-y, --yes"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <div class="code-content font-mono text-slate-300 text-sm">
+                  <code
+                    ><span class="syn-arg">--desktop</span> install or update only Antigravity 2.0<br />
+                    <span class="syn-arg">--ide</span> install or update only Antigravity IDE<br />
+                    <span class="syn-arg">--all</span> install or update both apps<br />
+                    <span class="syn-arg">--cli</span> run Google's official CLI installer<br />
+                    <span class="syn-arg">--no-nautilus</span> skip Nautilus integration<br />
+                    <span class="syn-arg">--no-apt</span> skip automatic apt installs<br />
+                    <span class="syn-arg">--force</span> reinstall the current version<br />
+                    <span class="syn-arg">--install-url URL</span> store the update helper URL<br />
+                    <span class="syn-arg">--status</span> show helper-managed installs<br />
+                    <span class="syn-arg">--print-downloads</span> print official tarball URLs<br />
+                    <span class="syn-arg">--uninstall</span> remove helper-managed files<br />
+                    <span class="syn-arg">-y, --yes</span> assume yes where possible</code
                   >
                 </div>
               </div>
@@ -713,10 +835,18 @@ sudo update-antigravity-ide"
                   </td>
                 </tr>
                 <tr>
-                  <td class="text-slate-300">CLI commands</td>
+                  <td class="text-slate-300">CLI launchers</td>
                   <td>
                     <code class="font-mono text-sm text-teal-400"
-                      >/usr/local/bin/antigravity*</code
+                      >/usr/local/bin/antigravity, /usr/local/bin/antigravity-ide</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-slate-300">Update helpers</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/usr/local/bin/antigravity-linux, /usr/local/bin/update-antigravity*</code
                     >
                   </td>
                 </tr>
@@ -736,8 +866,59 @@ sudo update-antigravity-ide"
                     >
                   </td>
                 </tr>
+                <tr>
+                  <td class="text-slate-300">Nautilus extension</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/usr/share/nautilus-python/extensions/open-in-antigravity-ide.py</code
+                    >
+                  </td>
+                </tr>
               </tbody>
             </table>
+          </div>
+        </section>
+
+
+
+        <!-- Systems section -->
+        <section class="section-card p-8 reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <span
+              class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
+              >Systems</span
+            >
+            <div class="flex-1 h-px bg-slate-700"></div>
+          </div>
+          <h2 class="text-3xl font-bold mb-3 text-white">Supported Linux environments</h2>
+          <p class="text-slate-400 leading-relaxed mb-6">
+            Designed for Debian and Ubuntu systems with apt. Other Linux distributions can run it when the required tools already exist.
+          </p>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="code-block">
+              <div class="code-header">
+                <span class="text-xs text-slate-400 font-mono">minimum runtime</span>
+              </div>
+              <div class="code-content font-mono text-slate-300 text-sm">
+                <code
+                  >glibc &gt;= 2.28<br />
+                  glibcxx &gt;= 3.4.25<br />
+                  x86_64 or ARM64 Linux tarballs when Google provides them</code
+                >
+              </div>
+            </div>
+            <div class="code-block">
+              <div class="code-header">
+                <span class="text-xs text-slate-400 font-mono">required tools</span>
+              </div>
+              <div class="code-content font-mono text-slate-300 text-sm">
+                <code
+                  >bash, curl, tar, python3<br />
+                  desktop-file-utils, xdg-utils<br />
+                  python3-nautilus for optional Nautilus integration</code
+                >
+              </div>
+            </div>
           </div>
         </section>
 
@@ -794,8 +975,9 @@ sudo bash install.sh --all'
                 <span class="syn-str"
                   >"https://opensnap.github.io/antigravity/install.sh"</span
                 >
-                -o install.sh <span class="syn-cmd">less</span> install.sh
-                <span class="syn-cmd">sudo bash</span> install.sh
+                -o install.sh<br />
+                <span class="syn-cmd">less</span> install.sh<br />
+                <span class="syn-cmd">sudo</span> bash install.sh
                 <span class="syn-arg">--all</span></code
               >
             </div>

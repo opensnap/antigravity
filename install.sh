@@ -509,7 +509,7 @@ print_downloads() {
 
 uninstall_all() {
   require_root_or_reexec
-  rm -rf /opt/antigravity /opt/antigravity.previous /opt/antigravity-ide /opt/antigravity-ide.previous
+  rm -rf /opt/antigravity /opt/antigravity.new /opt/antigravity.previous /opt/antigravity-ide /opt/antigravity-ide.new /opt/antigravity-ide.previous
   rm -f /usr/local/bin/antigravity /usr/local/bin/antigravity-ide /usr/local/bin/update-antigravity /usr/local/bin/update-antigravity-ide /usr/local/bin/antigravity-linux
   rm -f /usr/share/applications/antigravity.desktop /usr/share/applications/antigravity-ide.desktop
   rm -f /usr/share/icons/hicolor/512x512/apps/antigravity.png /usr/share/icons/hicolor/512x512/apps/antigravity-ide.png

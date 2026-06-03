@@ -29,7 +29,7 @@ This project does **not** mirror, modify, or redistribute Google Antigravity. Th
 
 ## Quick install from GitHub Pages
 
-After you publish this repository with GitHub Pages, replace `YOUR_GITHUB_USERNAME` below:
+Install Antigravity 2.0 and the IDE:
 
 ```bash
 INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
@@ -79,11 +79,13 @@ sudo update-antigravity-ide
 
 ## Status
 
+When installed from a published URL:
+
 ```bash
 antigravity-linux --status
 ```
 
-Or from a local checkout:
+For local-checkout installs without a stored installer URL, use the local script:
 
 ```bash
 bash install.sh --status
@@ -91,11 +93,13 @@ bash install.sh --status
 
 ## Uninstall
 
+When installed from a published URL:
+
 ```bash
 sudo antigravity-linux --uninstall
 ```
 
-Or from a local checkout:
+For local-checkout installs without a stored installer URL, use the local script:
 
 ```bash
 sudo bash install.sh --uninstall
@@ -113,9 +117,11 @@ The uninstall removes helper-managed files from `/opt`, `/usr/local/bin`, `/usr/
 --no-nautilus      Skip GNOME Files/Nautilus context-menu helper
 --no-apt           Do not install apt dependencies automatically
 --force            Reinstall even when the recorded version matches
+--install-url URL  Store URL used by the antigravity-linux update command
 --status           Show installed helper-managed apps and versions
 --print-downloads  Print resolved official Google tarball URLs
 --uninstall        Remove helper-managed installation
+-y, --yes          Non-interactive; assume yes where possible
 ```
 
 ## What it installs
@@ -149,35 +155,25 @@ GNOME Files/Nautilus integration additionally needs `python3-nautilus`.
 
 This repository includes a GitHub Actions workflow at `.github/workflows/pages.yml` that deploys the `docs/` directory to GitHub Pages.
 
-1. Create a public GitHub repository named `antigravity-linux`.
-2. Push this project to the `main` branch.
+1. Use this repository, `opensnap/antigravity`, or fork it under your own account.
+2. Push your changes to the `main` branch.
 3. Open **Settings → Pages**.
 4. Set **Build and deployment → Source** to **GitHub Actions**.
 5. Run or wait for the **Deploy GitHub Pages** workflow.
 6. Your installer will be available at:
 
 ```text
-https://YOUR_GITHUB_USERNAME.github.io/antigravity-linux/install.sh
+https://opensnap.github.io/antigravity/install.sh
 ```
 
-## Repository commands
+## Local development
+
+Clone the repository:
 
 ```bash
-git init
-git add .
-git commit -m "Initial Antigravity Linux Installer"
-git branch -M main
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/antigravity-linux.git
-git push -u origin main
+git clone https://github.com/opensnap/antigravity.git
+cd antigravity
 ```
-
-Or with GitHub CLI:
-
-```bash
-gh repo create antigravity-linux --public --source=. --remote=origin --push
-```
-
-## Development
 
 Run local checks:
 
@@ -189,6 +185,12 @@ Sync the GitHub Pages copy of the installer:
 
 ```bash
 bash scripts/sync-site.sh
+```
+
+Install from the local checkout:
+
+```bash
+sudo bash install.sh --all
 ```
 
 ## Security notes
@@ -209,7 +211,7 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 > Read the [contributing guidelines](CONTRIBUTING.md) for more information.
 
-The easiest way to contribute is to checking if this smoothy works on your OS and if any issues arise, [open an issue](https://github.com/opensnap/antigravity/issues/new), describe the problem, your system details, and screenshots (if possible).
+The easiest way to contribute is to check whether this works smoothly on your OS and if any issues arise, [open an issue](https://github.com/opensnap/antigravity/issues/new), describe the problem, your system details, and screenshots (if possible).
 
 ### Currently Confirmed OSes
 
