@@ -1,2 +1,5 @@
 User-agent: *
 Allow: /
+Allow: /llms.txt
+
+# LLM context: https://opensnap.github.io/antigravity/llms.txt
