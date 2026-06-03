@@ -32,6 +32,8 @@
       </div>
       <div class="terminal" aria-label="Install command preview">
         <div class="terminal-dots"><span></span><span></span><span></span></div>
+        <div class="code-header"><span>Install</span><button class="copy-btn" data-copy='INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button></div>
         <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all</code></pre>
       </div>
@@ -58,14 +60,20 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
       <p class="eyebrow">Install</p>
       <h2>Recommended command</h2>
       <p>Replace <code>YOUR_GITHUB_USERNAME</code> after you publish this repo to GitHub Pages.</p>
+      <div class="code-header"><span>antigravity + IDE</span><button class="copy-btn" data-copy='INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button></div>
       <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all</code></pre>
 
       <h3>Desktop app only</h3>
+      <div class="code-header"><span>antigravity</span><button class="copy-btn" data-copy='INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --'>Copy</button></div>
       <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --</code></pre>
 
       <h3>IDE only</h3>
+      <div class="code-header"><span>IDE</span><button class="copy-btn" data-copy='INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide'>Copy</button></div>
       <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide</code></pre>
     </section>
@@ -76,9 +84,14 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
         <h2>Keep Antigravity current</h2>
         <p>The installer stores its published URL, so installed machines can update without remembering the full curl command.</p>
       </div>
-      <pre><code>sudo antigravity-easy update --all
+      <div>
+        <div class="code-header"><span>Commands</span><button class="copy-btn" data-copy="sudo antigravity-easy update --all
+sudo update-antigravity
+sudo update-antigravity-ide">Copy</button></div>
+        <pre><code>sudo antigravity-easy update --all
 sudo update-antigravity
 sudo update-antigravity-ide</code></pre>
+      </div>
     </section>
 
     <section class="panel">
@@ -102,6 +115,9 @@ sudo update-antigravity-ide</code></pre>
       <p class="eyebrow">Security</p>
       <h2>Review before running</h2>
       <p>Because this installs system-wide files, it requires <code>sudo</code>. You can download and inspect the script first:</p>
+      <div class="code-header"><span>Inspect</span><button class="copy-btn" data-copy='curl -fsSL "https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh" -o install.sh
+less install.sh
+sudo bash install.sh --all'>Copy</button></div>
       <pre><code>curl -fsSL "https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh" -o install.sh
 less install.sh
 sudo bash install.sh --all</code></pre>
@@ -111,5 +127,22 @@ sudo bash install.sh --all</code></pre>
   <footer>
     <p>Unofficial community installer. Google Antigravity is a Google product. This project only wraps the official download flow.</p>
   </footer>
+
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const text = btn.dataset.copy;
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = 'Copied';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.classList.remove('copied');
+          }, 2000);
+        } catch {}
+      });
+    });
+  </script>
 </body>
 </html>
