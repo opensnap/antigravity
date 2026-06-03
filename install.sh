@@ -507,6 +507,32 @@ print_downloads() {
   rm -rf "$tmpdir"
 }
 
+print_success_summary() {
+  log ""
+  log "Antigravity Linux install complete."
+  log ""
+  log "Installed:"
+  if [ "$INSTALL_DESKTOP" -eq 1 ]; then
+    log "- Antigravity 2.0: /usr/local/bin/antigravity"
+  fi
+  if [ "$INSTALL_IDE" -eq 1 ]; then
+    log "- Antigravity IDE: /usr/local/bin/antigravity-ide"
+  fi
+  log ""
+  log "Manage:"
+  log "- Status:    antigravity-linux --status"
+  log "- Update:    sudo antigravity-linux update --all"
+  log "- Uninstall: sudo antigravity-linux --uninstall"
+  if [ -z "$INSTALLER_URL" ]; then
+    log ""
+    log "Note: antigravity-linux was installed without a stored URL. Re-run this local script for updates or reinstall from a published URL."
+  fi
+  if [ "$INSTALL_IDE" -eq 1 ]; then
+    log ""
+    log "Folder open integration: use your file manager's Open With menu, or Nautilus context menu after restarting Files."
+  fi
+}
+
 uninstall_all() {
   require_root_or_reexec
   rm -rf /opt/antigravity /opt/antigravity.new /opt/antigravity.previous /opt/antigravity-ide /opt/antigravity-ide.new /opt/antigravity-ide.previous
@@ -553,16 +579,7 @@ main() {
     fi
   fi
   install_manager_command
-  log "Done. Launch from the app menu or run: antigravity"
-  if [ "$INSTALL_IDE" -eq 1 ]; then
-    log "IDE command: antigravity-ide"
-    log "Folder open integration: use your file manager's Open With menu, or Nautilus context menu after restarting Files."
-  fi
-  if [ -n "$INSTALLER_URL" ]; then
-    log "Update helper installed: sudo antigravity-linux update --all"
-  else
-    log "Update helper installed without a stored URL. Re-run this local script for updates or reinstall from a published URL."
-  fi
+  print_success_summary
 }
 
 main "$@"
