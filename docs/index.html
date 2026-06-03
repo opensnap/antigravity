@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Antigravity Easy Installer — One-command setup for Google Antigravity 2.0 on Linux</title>
+    <title>Antigravity Linux Installer — One-command setup for Google Antigravity 2.0 on Linux</title>
     <meta
       name="description"
       content="One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE. Installs from official tarballs, adds desktop launchers, and keeps you updated."
@@ -17,7 +17,7 @@
       {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Antigravity Easy Installer",
+        "name": "Antigravity Linux Installer",
         "operatingSystem": "Linux (Debian/Ubuntu)",
         "applicationCategory": "DeveloperApplication",
         "description": "One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE using official Google tarballs.",
@@ -37,13 +37,13 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://opensnap.github.io/antigravity/" />
-    <meta property="og:title" content="Antigravity Easy Installer — One-command setup for Google Antigravity 2.0 on Linux" />
+    <meta property="og:title" content="Antigravity Linux Installer — One-command setup for Google Antigravity 2.0 on Linux" />
     <meta property="og:description" content="One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE. Installs from official tarballs with desktop integration." />
     <meta property="og:image" content="https://opensnap.github.io/opensnap/assets/opensnap-banner.png" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Antigravity Easy Installer — One-command setup for Google Antigravity 2.0 on Linux" />
+    <meta name="twitter:title" content="Antigravity Linux Installer — One-command setup for Google Antigravity 2.0 on Linux" />
     <meta name="twitter:description" content="One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE. Installs from official tarballs with desktop integration." />
     <meta name="twitter:image" content="https://opensnap.github.io/opensnap/assets/opensnap-banner.png" />
 
@@ -404,7 +404,7 @@
                 </svg>
                 Get the command
               </a>
-              <a href="install.sh" class="btn-ghost">View source</a>
+              <a href="https://github.com/opensnap/antigravity" class="btn-ghost" target="_blank">View source</a>
             </div>
           </div>
 
@@ -421,7 +421,7 @@
             <div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto">
               <div class="flex justify-between mb-4 items-center">
                 <span class="text-teal-400">$ install.sh</span>
-                <button class="copy-btn text-[10px] uppercase font-bold tracking-tighter text-slate-500 hover:text-white transition-colors" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"; curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button>
+                <button class="copy-btn text-[10px] uppercase font-bold tracking-tighter text-slate-500 hover:text-white transition-colors" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"; curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button>
               </div>
               <code class="text-slate-400">
                 <span class="text-slate-500"># Resolving official tarballs...</span><br>
@@ -514,7 +514,7 @@
             <p class="text-sm text-slate-400 leading-relaxed">
               Run
               <code class="font-mono text-teal-400 text-xs"
-                >antigravity-easy update</code
+                >antigravity-linux update</code
               >
               anytime to fetch the latest release.
             </p>
@@ -549,7 +549,7 @@
               <button
                 class="btn-copy"
                 data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'
               >
                 Copy
               </button>
@@ -562,7 +562,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
                 >
                 curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo
                 -E env
-                <span class="syn-var">ANTIGRAVITY_EASY_INSTALLER_URL</span
+                <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span
                 >=<span class="syn-str">"$INSTALLER_URL"</span> bash -s --
                 <span class="syn-arg">--all</span></code
               >
@@ -586,7 +586,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
                     <button
                       class="btn-copy text-xs"
                       data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --'
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s --'
                     >
                       Copy
                     </button>
@@ -614,7 +614,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
                     <button
                       class="btn-copy text-xs"
                       data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide'
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide'
                     >
                       Copy
                     </button>
@@ -655,7 +655,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
                   <span class="text-xs text-slate-400 font-mono">terminal</span>
                   <button
                     class="btn-copy"
-                    data-copy="sudo antigravity-easy update --all
+                    data-copy="sudo antigravity-linux update --all
 sudo update-antigravity
 sudo update-antigravity-ide"
                   >
@@ -664,7 +664,7 @@ sudo update-antigravity-ide"
                 </div>
                 <div class="code-content font-mono text-slate-300 text-sm">
                   <code
-                    ><span class="syn-cmd">sudo</span> antigravity-easy update
+                    ><span class="syn-cmd">sudo</span> antigravity-linux update
                     <span class="syn-arg">--all</span>
                     <span class="syn-cmd">sudo</span> update-antigravity
                     <span class="syn-cmd">sudo</span>
