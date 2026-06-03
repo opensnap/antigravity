@@ -6,6 +6,6 @@
 - Optional Antigravity IDE install.
 - App menu entries and icons.
 - `/usr/local/bin` launchers.
-- `antigravity-easy` update helper.
+- `antigravity-linux` update helper.
 - Folder open integration for Antigravity IDE.
 - GitHub Pages landing page and deploy workflow.

@@ -1,10 +1,11 @@
-# Antigravity Easy Installer
+# Antigravity Linux Installer
+
+> **This is a community helper. Not affiliated with, endorsed by, or supported by Google.**
 
 One-command Linux installer/updater for **Google Antigravity 2.0** and **Antigravity IDE** using Google's official tarball downloads.
 
-This project does **not** mirror, modify, or redistribute Google Antigravity. The installer resolves the latest official Google tarball from `https://antigravity.google/download` at install/update time, then adds Linux desktop integration around it.
+This project does **not** mirror, modify, or redistribute Google Antigravity. The installer resolves the latest official Google tarball from [https://antigravity.google/download](https://antigravity.google/download) at install/update time, then adds Linux desktop integration around it.
 
-> Unofficial community helper. Not affiliated with, endorsed by, or supported by Google.
 
 ## Features
 
@@ -17,42 +18,43 @@ This project does **not** mirror, modify, or redistribute Google Antigravity. Th
   - `antigravity`
   - `antigravity-ide`
 - Adds update helper:
-  - `sudo antigravity-easy update --all`
+  - `sudo antigravity-linux update --all`
 - Adds folder opening integration for IDE:
   - file manager `Open With` support through `.desktop` MIME entries
   - optional GNOME Files/Nautilus right-click menu helper
 - Preserves the Electron/Chromium sandbox permission model instead of launching with `--no-sandbox` by default.
+
+## Minimum Requirements
+> glibc >= 2.28, glibcxx >= 3.4.25 (e.g. Ubuntu 20. Debian 10, Fedora 36, RHEL 8)
 
 ## Quick install from GitHub Pages
 
 After you publish this repository with GitHub Pages, replace `YOUR_GITHUB_USERNAME` below:
 
 ```bash
-INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 ```
 
 Install only Antigravity 2.0 desktop app:
 
 ```bash
-INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --
+INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s --
 ```
 
 Install only Antigravity IDE:
 
 ```bash
-INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide
+INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide
 ```
 
 ## Quick install from raw GitHub
 
-If you do not want to use GitHub Pages yet:
-
 ```bash
-INSTALLER_URL="https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/antigravity-easy/main/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+INSTALLER_URL="https://raw.githubusercontent.com/opensnap/antigravity/main/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 ```
 
 ## Update
@@ -60,7 +62,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTA
 Once installed from a published URL:
 
 ```bash
-sudo antigravity-easy update --all
+sudo antigravity-linux update --all
 ```
 
 Desktop app only:
@@ -78,7 +80,7 @@ sudo update-antigravity-ide
 ## Status
 
 ```bash
-antigravity-easy --status
+antigravity-linux --status
 ```
 
 Or from a local checkout:
@@ -90,7 +92,7 @@ bash install.sh --status
 ## Uninstall
 
 ```bash
-sudo antigravity-easy --uninstall
+sudo antigravity-linux --uninstall
 ```
 
 Or from a local checkout:
@@ -123,7 +125,7 @@ The uninstall removes helper-managed files from `/opt`, `/usr/local/bin`, `/usr/
 | Antigravity 2.0 | `/opt/antigravity` |
 | Antigravity IDE | `/opt/antigravity-ide` |
 | CLI launchers | `/usr/local/bin/antigravity`, `/usr/local/bin/antigravity-ide` |
-| Update helper | `/usr/local/bin/antigravity-easy` |
+| Update helper | `/usr/local/bin/antigravity-linux` |
 | App launchers | `/usr/share/applications/antigravity*.desktop` |
 | Icons | `/usr/share/icons/hicolor/512x512/apps/` |
 | Nautilus extension | `/usr/share/nautilus-python/extensions/open-in-antigravity-ide.py` |
@@ -147,7 +149,7 @@ GNOME Files/Nautilus integration additionally needs `python3-nautilus`.
 
 This repository includes a GitHub Actions workflow at `.github/workflows/pages.yml` that deploys the `docs/` directory to GitHub Pages.
 
-1. Create a public GitHub repository named `antigravity-easy`.
+1. Create a public GitHub repository named `antigravity-linux`.
 2. Push this project to the `main` branch.
 3. Open **Settings → Pages**.
 4. Set **Build and deployment → Source** to **GitHub Actions**.
@@ -155,7 +157,7 @@ This repository includes a GitHub Actions workflow at `.github/workflows/pages.y
 6. Your installer will be available at:
 
 ```text
-https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh
+https://YOUR_GITHUB_USERNAME.github.io/antigravity-linux/install.sh
 ```
 
 ## Repository commands
@@ -163,16 +165,16 @@ https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh
 ```bash
 git init
 git add .
-git commit -m "Initial Antigravity Easy Installer"
+git commit -m "Initial Antigravity Linux Installer"
 git branch -M main
-git remote add origin https://github.com/YOUR_GITHUB_USERNAME/antigravity-easy.git
+git remote add origin https://github.com/YOUR_GITHUB_USERNAME/antigravity-linux.git
 git push -u origin main
 ```
 
 Or with GitHub CLI:
 
 ```bash
-gh repo create antigravity-easy --public --source=. --remote=origin --push
+gh repo create antigravity-linux --public --source=. --remote=origin --push
 ```
 
 ## Development
@@ -196,10 +198,22 @@ This installer uses `sudo` because it installs system-wide files under `/opt`, `
 For safer review before running:
 
 ```bash
-curl -fsSL "https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh" -o install.sh
+curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
 less install.sh
 sudo bash install.sh --all
 ```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+> Read the [contributing guidelines](CONTRIBUTING.md) for more information.
+
+The easiest way to contribute is to checking if this smoothy works on your OS and if any issues arise, [open an issue](https://github.com/opensnap/antigravity/issues/new), describe the problem, your system details, and screenshots (if possible).
+
+### Currently Confirmed OSes
+
+- Ubuntu 24 (LTS)
 
 ## License
 
