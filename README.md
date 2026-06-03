@@ -25,7 +25,7 @@ This project does **not** mirror, modify, or redistribute Google Antigravity. Th
 - Preserves the Electron/Chromium sandbox permission model instead of launching with `--no-sandbox` by default.
 
 ## Minimum Requirements
-> glibc >= 2.28, glibcxx >= 3.4.25 (e.g. Ubuntu 20. Debian 10, Fedora 36, RHEL 8)
+> `glibc >= 2.28, glibcxx >= 3.4.25 (e.g. Ubuntu 20. Debian 10, Fedora 36, RHEL 8)`
 
 ## Quick install from GitHub Pages
 
