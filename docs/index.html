@@ -1,147 +1,882 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Antigravity Easy Installer</title>
-  <meta name="description" content="One-command Linux installer/updater for Google Antigravity 2.0 and Antigravity IDE using official Google tarballs.">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-</head>
-<body>
-  <header class="hero">
-    <nav class="nav">
-      <a class="brand" href="./">Antigravity Easy</a>
-      <div class="links">
-        <a href="#install">Install</a>
-        <a href="#update">Update</a>
-        <a href="#security">Security</a>
-        <a href="https://antigravity.google/download" rel="noopener">Official download</a>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Antigravity Easy Installer — One-command setup for Google Antigravity 2.0 on Linux</title>
+    <meta
+      name="description"
+      content="One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE. Installs from official tarballs, adds desktop launchers, and keeps you updated."
+    />
+    <meta name="keywords" content="Antigravity, Google Antigravity, Antigravity IDE, Linux installer, Ubuntu, Debian, one-command install" />
+    <meta name="author" content="opensnap" />
+    <link rel="canonical" href="https://opensnap.github.io/antigravity/" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Antigravity Easy Installer",
+        "operatingSystem": "Linux (Debian/Ubuntu)",
+        "applicationCategory": "DeveloperApplication",
+        "description": "One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE using official Google tarballs.",
+        "url": "https://opensnap.github.io/antigravity/",
+        "author": {
+          "@type": "Organization",
+          "name": "opensnap"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://opensnap.github.io/antigravity/" />
+    <meta property="og:title" content="Antigravity Easy Installer — One-command setup for Google Antigravity 2.0 on Linux" />
+    <meta property="og:description" content="One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE. Installs from official tarballs with desktop integration." />
+    <meta property="og:image" content="https://opensnap.github.io/opensnap/assets/opensnap-banner.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Antigravity Easy Installer — One-command setup for Google Antigravity 2.0 on Linux" />
+    <meta name="twitter:description" content="One-command Linux installer for Google Antigravity 2.0 and Antigravity IDE. Installs from official tarballs with desktop integration." />
+    <meta name="twitter:image" content="https://opensnap.github.io/opensnap/assets/opensnap-banner.png" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Deep Slate Palette - Easier on the eyes */
+        --bg: #0f172a;          /* Deep slate background */
+        --bg-elevated: #1e293b; /* Lighter slate for cards */
+        --fg: #e2e8f0;          /* Soft off-white text */
+        --muted: #94a3b8;       /* Readable secondary text */
+        --accent: #2dd4bf;      /* Teal accent (calm, premium) */
+        --accent-dim: rgba(45, 212, 191, 0.1);
+        --border: #334155;      /* Subtle slate border */
+        --card: #1e293b;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-family: "Space Grotesk", system-ui, sans-serif;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        overflow-x: hidden;
+      }
+
+      .font-mono {
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      /* Background atmosphere - subtle blue/slate glow */
+      .bg-atmosphere {
+        background:
+          radial-gradient(
+            ellipse 80% 50% at 50% -20%,
+            rgba(45, 212, 191, 0.08),
+            transparent
+          ),
+          radial-gradient(
+            ellipse 60% 40% at 100% 0%,
+            rgba(56, 189, 248, 0.05),
+            transparent
+          ),
+          var(--bg);
+      }
+
+      /* Grid pattern overlay */
+      .grid-pattern {
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 64px 64px;
+      }
+
+      /* Reveal animations */
+      .reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition:
+          opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
+
+      /* Code block */
+      .code-block {
+        background: #0f172a; /* Slightly deeper inside blocks */
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      .code-header {
+        background: #1e293b;
+        border-bottom: 1px solid var(--border);
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .code-content {
+        padding: 16px 20px;
+        overflow-x: auto;
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .code-content::-webkit-scrollbar {
+        height: 4px;
+      }
+      .code-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .code-content::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 2px;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: var(--accent);
+        color: #0f172a; /* Dark text on teal */
+        font-weight: 600;
+        padding: 14px 28px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-primary:hover {
+        filter: brightness(1.1);
+        transform: translateY(-1px);
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+      }
+
+      .btn-ghost {
+        color: var(--fg);
+        border: 1px solid var(--border);
+        padding: 14px 28px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-weight: 500;
+      }
+      .btn-ghost:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--muted);
+      }
+
+      .btn-copy {
+        font-size: 12px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-copy:hover {
+        color: var(--fg);
+        border-color: var(--muted);
+      }
+      .btn-copy.copied {
+        color: #34d399; /* Emerald for success */
+        border-color: #34d399;
+        background: rgba(52, 211, 153, 0.1);
+      }
+
+      /* Nav link */
+      .nav-link {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 500;
+        transition: color 0.2s;
+        position: relative;
+      }
+      .nav-link:hover {
+        color: var(--fg);
+      }
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--accent);
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Feature card */
+      .feature-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 28px;
+        transition: all 0.3s;
+      }
+      .feature-card:hover {
+        border-color: rgba(45, 212, 191, 0.3);
+        transform: translateY(-2px);
+      }
+
+      /* Section card */
+      .section-card {
+        background: var(--bg-elevated);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+      }
+
+      /* Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        text-align: left;
+        font-weight: 500;
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      td {
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+      }
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Focus states */
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+
+      /* Syntax colors - Harmonized for Teal/Slate theme */
+      .syn-var {
+        color: #2dd4bf; /* Teal */
+      }
+      .syn-str {
+        color: #fbbf24; /* Soft Amber for contrast */
+      }
+      .syn-cmd {
+        color: #a78bfa; /* Soft Violet */
+      }
+      .syn-arg {
+        color: #94a3b8; /* Muted Slate */
+      }
+
+      /* Terminal styling */
+      .terminal-window {
+          background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
+          border: 1px solid var(--border);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      }
+    </style>
+  </head>
+  <body class="bg-atmosphere">
+    <!-- Nav -->
+
+    <nav
+      class="sticky top-0 z-50 backdrop-blur-md border-b border-white/5 py-4"
+    >
+      <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div
+            class="w-6 h-6 bg-teal-500 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(45,212,191,0.4)]"
+          >
+            <div class="w-2 h-2 bg-white rounded-full"></div>
+          </div>
+          <span class="font-extrabold tracking-tighter text-lg uppercase"
+            >Antigravity<span class="text-teal-400">.</span></span
+          >
+        </div>
+        <div
+          class="hidden md:flex gap-8 text-xs font-medium tracking-widest uppercase text-slate-400"
+        >
+          <a href="#install" class="hover:text-white transition-colors"
+            >Setup</a
+          >
+          <a href="#update" class="hover:text-white transition-colors"
+            >Updates</a
+          >
+          <a href="#security" class="hover:text-white transition-colors"
+            >Security</a
+          >
+          <a
+            href="https://antigravity.google/download"
+            class="px-3 py-1 bg-white/5 rounded-full hover:bg-white/10 transition-colors"
+            >Official Docs</a
+          >
+        </div>
       </div>
     </nav>
 
-    <section class="hero-grid">
-      <div>
-        <p class="eyebrow">Unofficial Linux helper</p>
-        <h1>Install Google Antigravity 2.0 on Debian/Ubuntu with one command.</h1>
-        <p class="lede">This installer resolves Google’s official tarball at install time, places it under <code>/opt</code>, adds app launchers, and gives you a clean update command.</p>
-        <div class="cta-row">
-          <a class="button" href="#install">Get the command</a>
-          <a class="button secondary" href="install.sh">View installer</a>
+    <!-- Hero -->
+    <header class="pt-32 pb-20 px-6">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="grid-pattern absolute inset-0 pointer-events-none opacity-50"
+        ></div>
+
+        <div class="relative grid lg:grid-cols-2 gap-16 items-center">
+          <!-- Left -->
+          <div class="reveal">
+            <div
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#334155] bg-[#1e293b] text-xs font-medium text-slate-400 mb-6"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Community Linux helper
+            </div>
+
+            <h1
+              class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05] mb-6"
+            >
+              Install Antigravity 2.0
+              <span class="block text-slate-400">with one command</span>
+            </h1>
+
+            <p class="text-lg text-slate-400 max-w-lg mb-10 leading-relaxed">
+              Resolves Google's official tarball at install time, places it
+              under <code class="font-mono text-teal-400 text-sm">/opt</code>,
+              adds launchers, and gives you a clean update command.
+            </p>
+
+            <div class="flex flex-wrap gap-4">
+              <a href="#install" class="btn-primary">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Get the command
+              </a>
+              <a href="install.sh" class="btn-ghost">View source</a>
+            </div>
+          </div>
+
+          <!-- Right - Terminal -->
+          <div class="terminal-window rounded-2xl overflow-hidden">
+            <div class="bg-[#0f172a] px-4 py-3 border-b border-white/5 flex justify-between items-center">
+              <div class="flex gap-1.5">
+                <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+              </div>
+              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-widest">bash — installer</span>
+            </div>
+            <div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto">
+              <div class="flex justify-between mb-4 items-center">
+                <span class="text-teal-400">$ install.sh</span>
+                <button class="copy-btn text-[10px] uppercase font-bold tracking-tighter text-slate-500 hover:text-white transition-colors" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"; curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button>
+              </div>
+              <code class="text-slate-400">
+                <span class="text-slate-500"># Resolving official tarballs...</span><br>
+                <span class="text-sky-400">OK</span> Fetching Google Antigravity 2.0<br>
+                <span class="text-sky-400">OK</span> Mapping /opt/antigravity<br>
+                <span class="text-sky-400">OK</span> Injecting desktop launchers<br>
+                <br>
+                <span class="text-emerald-400">Installation complete.</span>
+              </code>
+            </div>
+          </div>
+        </div>
+    </header>
+
+    <!-- Features -->
+    <section class="px-6 pb-20">
+      <div class="max-w-6xl mx-auto">
+        <div class="grid sm:grid-cols-3 gap-5">
+          <article class="feature-card reveal">
+            <div
+              class="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center mb-4"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2dd4bf"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+            </div>
+            <h3 class="font-semibold mb-2 text-white">Official tarballs</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              No binary mirrors or unofficial repackaging. Downloads directly
+              from Google at install time.
+            </p>
+          </article>
+
+          <article class="feature-card reveal" style="transition-delay: 50ms">
+            <div
+              class="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center mb-4"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2dd4bf"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </div>
+            <h3 class="font-semibold mb-2 text-white">Desktop integration</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              App menu entries, icons, CLI launchers, MIME associations, and
+              optional file browser integration.
+            </p>
+          </article>
+
+          <article class="feature-card reveal" style="transition-delay: 100ms">
+            <div
+              class="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center mb-4"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2dd4bf"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </div>
+            <h3 class="font-semibold mb-2 text-white">Built-in updates</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">
+              Run
+              <code class="font-mono text-teal-400 text-xs"
+                >antigravity-easy update</code
+              >
+              anytime to fetch the latest release.
+            </p>
+          </article>
         </div>
       </div>
-      <div class="terminal" aria-label="Install command preview">
-        <div class="terminal-dots"><span></span><span></span><span></span></div>
-        <div class="code-header"><span>Install</span><button class="copy-btn" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button></div>
-        <pre><code>INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all</code></pre>
-      </div>
-    </section>
-  </header>
-
-  <main>
-    <section class="cards">
-      <article class="card">
-        <h2>Official tarball flow</h2>
-        <p>No binary mirror. No unofficial repackaging. The script resolves Google’s current Antigravity download URL when it runs.</p>
-      </article>
-      <article class="card">
-        <h2>Desktop integration</h2>
-        <p>App menu entries, icons, command launchers, MIME integration, and optional Nautilus right-click folder opening.</p>
-      </article>
-      <article class="card">
-        <h2>Updates included</h2>
-        <p>Run <code>sudo antigravity-easy update --all</code> later to fetch the latest official tarballs again.</p>
-      </article>
     </section>
 
-    <section id="install" class="panel">
-      <p class="eyebrow">Install</p>
-      <h2>Recommended command</h2>
-      <div class="code-header"><span>antigravity + IDE</span><button class="copy-btn" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button></div>
-      <pre><code>INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all</code></pre>
+    <!-- Main content -->
+    <main class="px-6 pb-24">
+      <div class="max-w-6xl mx-auto space-y-6">
+        <!-- Install section -->
+        <section id="install" class="section-card p-8 reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <span
+              class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
+              >Install</span
+            >
+            <div class="flex-1 h-px bg-slate-700"></div>
+          </div>
 
-      <h3>Desktop app only</h3>
-      <div class="code-header"><span>antigravity</span><button class="copy-btn" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --'>Copy</button></div>
-      <pre><code>INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --</code></pre>
+          <h2 class="text-3xl font-bold mb-2 text-white">Recommended command</h2>
+          <p class="text-slate-400 mb-8">
+            Install both Antigravity 2.0 desktop app and IDE.
+          </p>
 
-      <h3>IDE only</h3>
-      <div class="code-header"><span>IDE</span><button class="copy-btn" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide'>Copy</button></div>
-      <pre><code>INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide</code></pre>
-    </section>
+          <div class="code-block">
+            <div class="code-header">
+              <span class="text-xs text-slate-400 font-mono"
+                >antigravity + IDE</span
+              >
+              <button
+                class="btn-copy"
+                data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'
+              >
+                Copy
+              </button>
+            </div>
+            <div class="code-content font-mono text-slate-300">
+              <code
+                ><span class="syn-var">INSTALLER_URL</span>=<span
+                  class="syn-str"
+                  >"https://opensnap.github.io/antigravity/install.sh"</span
+                >
+                curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo
+                -E env
+                <span class="syn-var">ANTIGRAVITY_EASY_INSTALLER_URL</span
+                >=<span class="syn-str">"$INSTALLER_URL"</span> bash -s --
+                <span class="syn-arg">--all</span></code
+              >
+            </div>
+          </div>
 
-    <section id="update" class="panel split">
-      <div>
-        <p class="eyebrow">Update</p>
-        <h2>Keep Antigravity current</h2>
-        <p>The installer stores its published URL, so installed machines can update without remembering the full curl command.</p>
-      </div>
-      <div>
-        <div class="code-header"><span>Commands</span><button class="copy-btn" data-copy="sudo antigravity-easy update --all
+          <div class="mt-10 pt-8 border-t border-slate-700">
+            <div class="grid sm:grid-cols-2 gap-8">
+              <div>
+                <h3 class="font-semibold mb-3 flex items-center gap-2 text-white">
+                  <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                  Desktop app only
+                </h3>
+                <div class="code-block">
+                  <div
+                    class="px-4 py-3 flex justify-between items-center border-b border-slate-700"
+                  >
+                    <span class="text-xs text-slate-400 font-mono"
+                      >--desktop</span
+                    >
+                    <button
+                      class="btn-copy text-xs"
+                      data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --'
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-content font-mono text-xs text-slate-300">
+                    <code
+                      >curl -fsSL
+                      <span class="syn-str">"$INSTALLER_URL"</span> | sudo bash
+                      -s --</code
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="font-semibold mb-3 flex items-center gap-2 text-white">
+                  <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                  IDE only
+                </h3>
+                <div class="code-block">
+                  <div
+                    class="px-4 py-3 flex justify-between items-center border-b border-slate-700"
+                  >
+                    <span class="text-xs text-slate-400 font-mono">--ide</span>
+                    <button
+                      class="btn-copy text-xs"
+                      data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide'
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <div class="code-content font-mono text-xs text-slate-300">
+                    <code
+                      >curl -fsSL
+                      <span class="syn-str">"$INSTALLER_URL"</span> | sudo bash
+                      -s -- <span class="syn-arg">--ide</span></code
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Update section -->
+        <section id="update" class="section-card p-8 reveal">
+          <div class="grid lg:grid-cols-2 gap-10">
+            <div>
+              <div class="flex items-center gap-3 mb-6">
+                <span
+                  class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
+                  >Update</span
+                >
+                <div class="flex-1 h-px bg-slate-700"></div>
+              </div>
+              <h2 class="text-3xl font-bold mb-3 text-white">Keep it current</h2>
+              <p class="text-slate-400 leading-relaxed">
+                The installer registers its URL during setup, so updates work
+                without remembering the original curl command.
+              </p>
+            </div>
+            <div>
+              <div class="code-block">
+                <div class="code-header">
+                  <span class="text-xs text-slate-400 font-mono">terminal</span>
+                  <button
+                    class="btn-copy"
+                    data-copy="sudo antigravity-easy update --all
 sudo update-antigravity
-sudo update-antigravity-ide">Copy</button></div>
-        <pre><code>sudo antigravity-easy update --all
-sudo update-antigravity
-sudo update-antigravity-ide</code></pre>
-      </div>
-    </section>
+sudo update-antigravity-ide"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <div class="code-content font-mono text-slate-300 text-sm">
+                  <code
+                    ><span class="syn-cmd">sudo</span> antigravity-easy update
+                    <span class="syn-arg">--all</span>
+                    <span class="syn-cmd">sudo</span> update-antigravity
+                    <span class="syn-cmd">sudo</span>
+                    update-antigravity-ide</code
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-    <section class="panel">
-      <p class="eyebrow">What gets installed</p>
-      <h2>Clean system paths</h2>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Component</th><th>Path</th></tr></thead>
-          <tbody>
-            <tr><td>Antigravity 2.0</td><td><code>/opt/antigravity</code></td></tr>
-            <tr><td>Antigravity IDE</td><td><code>/opt/antigravity-ide</code></td></tr>
-            <tr><td>Commands</td><td><code>/usr/local/bin/antigravity*</code></td></tr>
-            <tr><td>Launchers</td><td><code>/usr/share/applications/antigravity*.desktop</code></td></tr>
-            <tr><td>Icons</td><td><code>/usr/share/icons/hicolor/512x512/apps</code></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <!-- Paths section -->
+        <section class="section-card p-8 reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <span
+              class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
+              >Paths</span
+            >
+            <div class="flex-1 h-px bg-slate-700"></div>
+          </div>
+          <h2 class="text-3xl font-bold mb-6 text-white">System locations</h2>
 
-    <section id="security" class="panel warning">
-      <p class="eyebrow">Security</p>
-      <h2>Review before running</h2>
-      <p>Because this installs system-wide files, it requires <code>sudo</code>. You can download and inspect the script first:</p>
-      <div class="code-header"><span>Inspect</span><button class="copy-btn" data-copy='curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
+          <div class="overflow-x-auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>Component</th>
+                  <th>Path</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-slate-300">Antigravity 2.0</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/opt/antigravity</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-slate-300">Antigravity IDE</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/opt/antigravity-ide</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-slate-300">CLI commands</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/usr/local/bin/antigravity*</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-slate-300">Desktop entries</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/usr/share/applications/</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-slate-300">Icons</td>
+                  <td>
+                    <code class="font-mono text-sm text-teal-400"
+                      >/usr/share/icons/hicolor/</code
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Security section -->
+        <section
+          id="security"
+          class="section-card p-8 border-amber-900/30 bg-[#1c1917] reveal"
+        >
+          <div class="flex items-center gap-3 mb-6">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fbbf24"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span
+              class="text-xs font-semibold text-amber-400 tracking-wider uppercase"
+              >Security</span
+            >
+            <div class="flex-1 h-px bg-amber-900/30"></div>
+          </div>
+
+          <h2 class="text-3xl font-bold mb-3 text-white">Review before running</h2>
+          <p class="text-slate-300 mb-8 leading-relaxed">
+            This script runs with
+            <code class="font-mono text-amber-400 text-sm">sudo</code> to
+            install system-wide files. Always inspect scripts before executing
+            them with elevated privileges.
+          </p>
+
+          <div class="code-block bg-[#0f172a]">
+            <div class="code-header bg-[#1e293b]">
+              <span class="text-xs text-slate-400 font-mono"
+                >inspect-then-run.sh</span
+              >
+              <button
+                class="btn-copy"
+                data-copy='curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
 less install.sh
-sudo bash install.sh --all'>Copy</button></div>
-      <pre><code>curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
-less install.sh
-sudo bash install.sh --all</code></pre>
-    </section>
-  </main>
+sudo bash install.sh --all'
+              >
+                Copy
+              </button>
+            </div>
+            <div class="code-content font-mono text-slate-300">
+              <code
+                ><span class="syn-cmd">curl</span> -fsSL
+                <span class="syn-str"
+                  >"https://opensnap.github.io/antigravity/install.sh"</span
+                >
+                -o install.sh <span class="syn-cmd">less</span> install.sh
+                <span class="syn-cmd">sudo bash</span> install.sh
+                <span class="syn-arg">--all</span></code
+              >
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
 
-  <footer>
-    <p>Unofficial community installer. Google Antigravity is a Google product. This project only wraps the official download flow.</p>
-  </footer>
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 px-6 py-12">
+      <div class="max-w-6xl mx-auto">
+        <div
+          class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+        >
+          <div>
+            <p class="text-sm text-slate-400">
+              Community installer. Not affiliated with Google.
+            </p>
+            <p class="text-xs text-slate-500 mt-1">
+              Google Antigravity is a trademark of Google LLC.
+            </p>
+          </div>
+          <a
+            href="https://antigravity.google/download"
+            rel="noopener"
+            class="nav-link text-sm"
+            >Official download page</a
+          >
+        </div>
+      </div>
+    </footer>
 
-  <script>
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const text = btn.dataset.copy;
-        try {
-          await navigator.clipboard.writeText(text);
-          btn.textContent = 'Copied';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = 'Copy';
-            btn.classList.remove('copied');
-          }, 2000);
-        } catch {}
+    <script>
+      // Scroll reveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -50px 0px" },
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+
+      // Copy buttons
+      document.querySelectorAll(".btn-copy, .copy-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const text = btn.dataset.copy;
+          if (!text) return;
+
+          try {
+            await navigator.clipboard.writeText(text);
+            const original = btn.textContent;
+            btn.textContent = "Copied";
+            btn.classList.add("copied");
+
+            setTimeout(() => {
+              btn.textContent = original;
+              btn.classList.remove("copied");
+            }, 2000);
+          } catch (err) {
+            console.error("Copy failed:", err);
+          }
+        });
       });
-    });
-  </script>
-</body>
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+        link.addEventListener("click", (e) => {
+          const target = document.querySelector(link.getAttribute("href"));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    </script>
+  </body>
 </html>
