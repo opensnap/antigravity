@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Antigravity Easy Installer
+# Antigravity Linux Installer
 # Installs/updates Google Antigravity 2.0 and, optionally, Antigravity IDE on Debian/Ubuntu.
 # It resolves the latest official Google tarballs from https://antigravity.google/download.
 set -euo pipefail
 
 ORIGINAL_ARGS=("$@")
-PROJECT_NAME="antigravity-easy"
+PROJECT_NAME="antigravity-linux"
 DOWNLOAD_PAGE="https://antigravity.google/download"
 CLI_INSTALLER="https://antigravity.google/cli/install.sh"
 INSTALL_DESKTOP=1
@@ -18,7 +18,7 @@ DO_STATUS=0
 DO_PRINT_DOWNLOADS=0
 FORCE=0
 YES=0
-INSTALLER_URL="${ANTIGRAVITY_EASY_INSTALLER_URL:-}"
+INSTALLER_URL="${ANTIGRAVITY_LINUX_INSTALLER_URL:-}"
 
 log() { printf '%s\n' "$*"; }
 warn() { printf 'WARN: %s\n' "$*" >&2; }
@@ -27,7 +27,7 @@ need() { command -v "$1" >/dev/null 2>&1 || err "Required command not found: $1"
 
 usage() {
   cat <<'USAGE'
-Antigravity Easy Installer
+Antigravity Linux Installer
 
 Usage:
   install.sh [install|update] [options]
@@ -46,7 +46,7 @@ Options:
   --no-nautilus          Skip GNOME Files/Nautilus context-menu helper
   --no-apt               Do not install apt dependencies automatically
   --force                Reinstall even when the recorded version matches
-  --install-url URL      Store URL used by the antigravity-easy update command
+  --install-url URL      Store URL used by the antigravity-linux update command
   --status               Show installed helper-managed apps and versions
   --print-downloads      Print the resolved official Google tarball URLs
   --uninstall            Remove helper-managed Antigravity desktop/IDE files
@@ -54,11 +54,11 @@ Options:
   -h, --help             Show this help
 
 Recommended GitHub Pages one-liner:
-  INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"; \
-  curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+  INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-linux/install.sh"; \
+  curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 
 Update after install:
-  sudo antigravity-easy update --all
+  sudo antigravity-linux update --all
 USAGE
 }
 
@@ -102,9 +102,9 @@ require_root_or_reexec() {
     return 0
   fi
   if command -v sudo >/dev/null 2>&1 && [ -n "${BASH_SOURCE[0]:-}" ] && [ -r "${BASH_SOURCE[0]}" ] && [ "${BASH_SOURCE[0]}" != "bash" ] && [ "${BASH_SOURCE[0]}" != "sh" ]; then
-    exec sudo -E env "ANTIGRAVITY_EASY_INSTALLER_URL=$INSTALLER_URL" bash "${BASH_SOURCE[0]}" "${ORIGINAL_ARGS[@]}"
+    exec sudo -E env "ANTIGRAVITY_LINUX_INSTALLER_URL=$INSTALLER_URL" bash "${BASH_SOURCE[0]}" "${ORIGINAL_ARGS[@]}"
   fi
-  err "System-wide install needs root. Use: curl -fsSL <installer-url> | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL=<installer-url> bash"
+  err "System-wide install needs root. Use: curl -fsSL <installer-url> | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL=<installer-url> bash"
 }
 
 install_deps_debian() {
@@ -271,7 +271,7 @@ install_desktop_app() {
   read -r version url < <(resolve_desktop_download "$js")
   local root="/opt/antigravity"
   local target="$root/$DESKTOP_TOP/antigravity"
-  local version_file="$root/.antigravity-easy-version"
+  local version_file="$root/.antigravity-linux-version"
   if [ "$FORCE" -eq 0 ] && [ -x "$target" ] && [ "$(installed_version "$version_file")" = "$version" ]; then
     log "Antigravity 2.0 $version is already installed."
     return
@@ -295,8 +295,8 @@ install_desktop_app() {
   rm -rf "${root}.new"
   mkdir -p "${root}.new"
   cp -a "$tmpdir/$top_dir" "${root}.new/"
-  printf '%s\n' "$version" > "${root}.new/.antigravity-easy-version"
-  printf '%s\n' "$url" > "${root}.new/.antigravity-easy-source-url"
+  printf '%s\n' "$version" > "${root}.new/.antigravity-linux-version"
+  printf '%s\n' "$url" > "${root}.new/.antigravity-linux-source-url"
   fix_chrome_sandbox "${root}.new/$top_dir/chrome-sandbox"
   safe_replace_dir "${root}.new" "$root"
 
@@ -328,7 +328,7 @@ install_ide_app() {
   read -r version url < <(resolve_ide_download "$js")
   local root="/opt/antigravity-ide"
   local install_dir="Antigravity-IDE"
-  local version_file="$root/.antigravity-easy-version"
+  local version_file="$root/.antigravity-linux-version"
   if [ "$FORCE" -eq 0 ] && [ -x "$root/$install_dir/antigravity-ide" ] && [ "$(installed_version "$version_file")" = "$version" ]; then
     log "Antigravity IDE $version is already installed."
     return
@@ -347,8 +347,8 @@ install_ide_app() {
   rm -rf "${root}.new"
   mkdir -p "${root}.new/$install_dir"
   cp -a "$tmpdir/$top_dir/." "${root}.new/$install_dir/"
-  printf '%s\n' "$version" > "${root}.new/.antigravity-easy-version"
-  printf '%s\n' "$url" > "${root}.new/.antigravity-easy-source-url"
+  printf '%s\n' "$version" > "${root}.new/.antigravity-linux-version"
+  printf '%s\n' "$url" > "${root}.new/.antigravity-linux-source-url"
   fix_chrome_sandbox "${root}.new/$install_dir/chrome-sandbox"
   safe_replace_dir "${root}.new" "$root"
 
@@ -437,49 +437,49 @@ PY
 
 install_manager_command() {
   local installer_url="$INSTALLER_URL"
-  cat > /usr/local/bin/antigravity-easy <<SH
+  cat > /usr/local/bin/antigravity-linux <<SH
 #!/usr/bin/env bash
 set -euo pipefail
 SCRIPT_URL="$installer_url"
 if [ -z "\$SCRIPT_URL" ]; then
   echo "No installer URL was stored." >&2
-  echo "Reinstall with ANTIGRAVITY_EASY_INSTALLER_URL set, or run install.sh locally." >&2
+  echo "Reinstall with ANTIGRAVITY_LINUX_INSTALLER_URL set, or run install.sh locally." >&2
   exit 1
 fi
 if [ "\$(id -u)" -eq 0 ]; then
-  curl -fsSL "\$SCRIPT_URL" | env ANTIGRAVITY_EASY_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
+  curl -fsSL "\$SCRIPT_URL" | env ANTIGRAVITY_LINUX_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
 else
-  curl -fsSL "\$SCRIPT_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
+  curl -fsSL "\$SCRIPT_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
 fi
 SH
-  chmod +x /usr/local/bin/antigravity-easy
+  chmod +x /usr/local/bin/antigravity-linux
   cat > /usr/local/bin/update-antigravity <<'SH'
 #!/usr/bin/env bash
-exec antigravity-easy update --desktop "$@"
+exec antigravity-linux update --desktop "$@"
 SH
   chmod +x /usr/local/bin/update-antigravity
   cat > /usr/local/bin/update-antigravity-ide <<'SH'
 #!/usr/bin/env bash
-exec antigravity-easy update --ide "$@"
+exec antigravity-linux update --ide "$@"
 SH
   chmod +x /usr/local/bin/update-antigravity-ide
 }
 
 print_status() {
-  log "Antigravity Easy status"
+  log "Antigravity Linux status"
   if [ -x /usr/local/bin/antigravity ]; then
-    log "- Antigravity 2.0: installed ($(installed_version /opt/antigravity/.antigravity-easy-version))"
+    log "- Antigravity 2.0: installed ($(installed_version /opt/antigravity/.antigravity-linux-version))"
     log "  Command: /usr/local/bin/antigravity"
   else
     log "- Antigravity 2.0: not installed by this helper"
   fi
   if [ -x /usr/local/bin/antigravity-ide ]; then
-    log "- Antigravity IDE: installed ($(installed_version /opt/antigravity-ide/.antigravity-easy-version))"
+    log "- Antigravity IDE: installed ($(installed_version /opt/antigravity-ide/.antigravity-linux-version))"
     log "  Command: /usr/local/bin/antigravity-ide"
   else
     log "- Antigravity IDE: not installed by this helper"
   fi
-  if [ -x /usr/local/bin/antigravity-easy ]; then
+  if [ -x /usr/local/bin/antigravity-linux ]; then
     log "- Update helper: installed"
   else
     log "- Update helper: not installed"
@@ -510,7 +510,7 @@ print_downloads() {
 uninstall_all() {
   require_root_or_reexec
   rm -rf /opt/antigravity /opt/antigravity.previous /opt/antigravity-ide /opt/antigravity-ide.previous
-  rm -f /usr/local/bin/antigravity /usr/local/bin/antigravity-ide /usr/local/bin/update-antigravity /usr/local/bin/update-antigravity-ide /usr/local/bin/antigravity-easy
+  rm -f /usr/local/bin/antigravity /usr/local/bin/antigravity-ide /usr/local/bin/update-antigravity /usr/local/bin/update-antigravity-ide /usr/local/bin/antigravity-linux
   rm -f /usr/share/applications/antigravity.desktop /usr/share/applications/antigravity-ide.desktop
   rm -f /usr/share/icons/hicolor/512x512/apps/antigravity.png /usr/share/icons/hicolor/512x512/apps/antigravity-ide.png
   rm -f /usr/share/nautilus-python/extensions/open-in-antigravity-ide.py
@@ -559,7 +559,7 @@ main() {
     log "Folder open integration: use your file manager's Open With menu, or Nautilus context menu after restarting Files."
   fi
   if [ -n "$INSTALLER_URL" ]; then
-    log "Update helper installed: sudo antigravity-easy update --all"
+    log "Update helper installed: sudo antigravity-linux update --all"
   else
     log "Update helper installed without a stored URL. Re-run this local script for updates or reinstall from a published URL."
   fi
