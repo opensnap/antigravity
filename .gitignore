@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+*.tmp
+*.log
+/dist/
+/.cache/

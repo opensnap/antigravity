@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Antigravity Easy Installer</title>
+  <meta name="description" content="One-command Linux installer/updater for Google Antigravity 2.0 and Antigravity IDE using official Google tarballs.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <a class="brand" href="./">Antigravity Easy</a>
+      <div class="links">
+        <a href="#install">Install</a>
+        <a href="#update">Update</a>
+        <a href="#security">Security</a>
+        <a href="https://antigravity.google/download" rel="noopener">Official download</a>
+      </div>
+    </nav>
+
+    <section class="hero-grid">
+      <div>
+        <p class="eyebrow">Unofficial Linux helper</p>
+        <h1>Install Google Antigravity 2.0 on Debian/Ubuntu with one command.</h1>
+        <p class="lede">This installer resolves Google’s official tarball at install time, places it under <code>/opt</code>, adds app launchers, and gives you a clean update command.</p>
+        <div class="cta-row">
+          <a class="button" href="#install">Get the command</a>
+          <a class="button secondary" href="install.sh">View installer</a>
+        </div>
+      </div>
+      <div class="terminal" aria-label="Install command preview">
+        <div class="terminal-dots"><span></span><span></span><span></span></div>
+        <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all</code></pre>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="cards">
+      <article class="card">
+        <h2>Official tarball flow</h2>
+        <p>No binary mirror. No unofficial repackaging. The script resolves Google’s current Antigravity download URL when it runs.</p>
+      </article>
+      <article class="card">
+        <h2>Desktop integration</h2>
+        <p>App menu entries, icons, command launchers, MIME integration, and optional Nautilus right-click folder opening.</p>
+      </article>
+      <article class="card">
+        <h2>Updates included</h2>
+        <p>Run <code>sudo antigravity-easy update --all</code> later to fetch the latest official tarballs again.</p>
+      </article>
+    </section>
+
+    <section id="install" class="panel">
+      <p class="eyebrow">Install</p>
+      <h2>Recommended command</h2>
+      <p>Replace <code>YOUR_GITHUB_USERNAME</code> after you publish this repo to GitHub Pages.</p>
+      <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all</code></pre>
+
+      <h3>Desktop app only</h3>
+      <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s --</code></pre>
+
+      <h3>IDE only</h3>
+      <pre><code>INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_EASY_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide</code></pre>
+    </section>
+
+    <section id="update" class="panel split">
+      <div>
+        <p class="eyebrow">Update</p>
+        <h2>Keep Antigravity current</h2>
+        <p>The installer stores its published URL, so installed machines can update without remembering the full curl command.</p>
+      </div>
+      <pre><code>sudo antigravity-easy update --all
+sudo update-antigravity
+sudo update-antigravity-ide</code></pre>
+    </section>
+
+    <section class="panel">
+      <p class="eyebrow">What gets installed</p>
+      <h2>Clean system paths</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Component</th><th>Path</th></tr></thead>
+          <tbody>
+            <tr><td>Antigravity 2.0</td><td><code>/opt/antigravity</code></td></tr>
+            <tr><td>Antigravity IDE</td><td><code>/opt/antigravity-ide</code></td></tr>
+            <tr><td>Commands</td><td><code>/usr/local/bin/antigravity*</code></td></tr>
+            <tr><td>Launchers</td><td><code>/usr/share/applications/antigravity*.desktop</code></td></tr>
+            <tr><td>Icons</td><td><code>/usr/share/icons/hicolor/512x512/apps</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="security" class="panel warning">
+      <p class="eyebrow">Security</p>
+      <h2>Review before running</h2>
+      <p>Because this installs system-wide files, it requires <code>sudo</code>. You can download and inspect the script first:</p>
+      <pre><code>curl -fsSL "https://YOUR_GITHUB_USERNAME.github.io/antigravity-easy/install.sh" -o install.sh
+less install.sh
+sudo bash install.sh --all</code></pre>
+    </section>
+  </main>
+
+  <footer>
+    <p>Unofficial community installer. Google Antigravity is a Google product. This project only wraps the official download flow.</p>
+  </footer>
+</body>
+</html>
