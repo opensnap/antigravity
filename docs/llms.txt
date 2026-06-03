@@ -1,0 +1,59 @@
+# Antigravity Linux Installer
+
+> Community Linux installer/updater for Google Antigravity 2.0 and Antigravity IDE. Not affiliated with, endorsed by, or supported by Google.
+
+## Project
+
+- Website: https://opensnap.github.io/antigravity/
+- Source: https://github.com/opensnap/antigravity
+- Installer: https://opensnap.github.io/antigravity/install.sh
+- Official Google download page: https://antigravity.google/download
+
+## What This Project Does
+
+This project provides a one-command Linux installer that resolves Google Antigravity tarball URLs from the official Google download page at install or update time. It does not mirror, modify, or redistribute Google Antigravity binaries.
+
+The installer can install or update:
+
+- Google Antigravity 2.0 desktop app
+- Google Antigravity IDE
+- Linux desktop launchers
+- App icons
+- CLI launchers
+- Update helper commands
+- Optional GNOME Files/Nautilus context-menu integration
+
+## Install Command
+
+```bash
+INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+```
+
+## Manage Commands
+
+```bash
+antigravity-linux --status
+sudo antigravity-linux update --all
+sudo antigravity-linux --uninstall
+```
+
+## Installed Paths
+
+- Antigravity 2.0: /opt/antigravity
+- Antigravity IDE: /opt/antigravity-ide
+- CLI launchers: /usr/local/bin/antigravity, /usr/local/bin/antigravity-ide
+- Update helper: /usr/local/bin/antigravity-linux
+- Desktop entries: /usr/share/applications/
+- Icons: /usr/share/icons/hicolor/
+- Nautilus extension: /usr/share/nautilus-python/extensions/open-in-antigravity-ide.py
+
+## Supported Systems
+
+Designed for Debian and Ubuntu systems with apt. Tested on Ubuntu 24.04 LTS. Other Linux distributions can work when the required tools are already installed.
+
+Required tools include bash, curl, tar, python3, desktop-file-utils, and xdg-utils. Optional Nautilus integration requires python3-nautilus.
+
+## Safety Notes
+
+The installer uses sudo because it writes system-wide files under /opt, /usr/local/bin, /usr/share/applications, and /usr/share/icons. Review install.sh before running if desired.
