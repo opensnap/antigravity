@@ -1,0 +1,295 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - img "Antigravity Logo" [ref=e5]
+        - generic [ref=e6]: Antigravity | Linux
+      - generic [ref=e7]:
+        - link "Setup" [ref=e8] [cursor=pointer]:
+          - /url: "#install"
+        - link "Updates" [ref=e9] [cursor=pointer]:
+          - /url: "#update"
+        - link "Manage" [ref=e10] [cursor=pointer]:
+          - /url: "#manage"
+        - link "Security" [ref=e11] [cursor=pointer]:
+          - /url: "#security"
+        - link "Official Docs" [ref=e12] [cursor=pointer]:
+          - /url: https://antigravity.google/download
+  - banner [ref=e13]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]: Community Linux helper
+        - heading "Install Antigravity 2.0 with one command" [level=1] [ref=e19]:
+          - text: Install Antigravity 2.0
+          - generic [ref=e20]: with one command
+        - paragraph [ref=e21]:
+          - text: Resolves Google's official tarball at install time, places it under
+          - code [ref=e22]: /opt
+          - text: ", adds launchers, and gives you a clean update command."
+        - generic [ref=e23]:
+          - link "Get the command" [ref=e24] [cursor=pointer]:
+            - /url: "#install"
+            - img [ref=e25]
+            - text: Get the command
+          - link "View source" [ref=e28] [cursor=pointer]:
+            - /url: https://github.com/opensnap/antigravity
+            - img [ref=e29]
+            - text: View source
+      - generic [ref=e31]:
+        - generic [ref=e37]: bash — installer
+        - generic [ref=e38]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: $ install.sh
+            - button "Copy" [ref=e41] [cursor=pointer]
+          - code [ref=e42]:
+            - text: "# Resolving official tarballs..."
+            - text: OK Fetching Google Antigravity 2.0
+            - text: OK Mapping /opt/antigravity
+            - text: OK Injecting desktop launchers
+            - text: Installation complete.
+  - generic [ref=e45]:
+    - article [ref=e46]:
+      - img [ref=e48]
+      - heading "Official tarballs" [level=3] [ref=e51]
+      - paragraph [ref=e52]: No binary mirrors or unofficial repackaging. Downloads directly from Google at install time.
+    - article [ref=e53]:
+      - img [ref=e55]
+      - heading "Desktop integration" [level=3] [ref=e57]
+      - paragraph [ref=e58]: App menu entries, icons, CLI launchers, MIME associations, and optional file browser integration.
+    - article [ref=e59]:
+      - img [ref=e61]
+      - heading "Built-in updates" [level=3] [ref=e64]
+      - paragraph [ref=e65]:
+        - text: Run
+        - code [ref=e66]: antigravity-linux update
+        - text: anytime to fetch the latest release.
+  - main [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e71]: Install
+        - heading "Recommended command" [level=2] [ref=e73]
+        - paragraph [ref=e74]: Install both Antigravity 2.0 desktop app and IDE.
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]: antigravity + IDE
+            - button "Copy" [ref=e78] [cursor=pointer]
+          - code [ref=e80]:
+            - text: INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+            - text: curl -fsSL "$INSTALLER_URL" | sudo -E env
+            - text: ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+        - generic [ref=e81]:
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - heading "Desktop app (Agent) only" [level=3] [ref=e84]: Desktop app (Agent) only
+              - generic [ref=e86]:
+                - generic [ref=e87]:
+                  - generic [ref=e88]: "--desktop"
+                  - button "Copy" [ref=e89] [cursor=pointer]
+                - code [ref=e91]:
+                  - text: INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+                  - text: curl -fsSL "$INSTALLER_URL" | sudo -E env
+                  - text: ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s --
+            - generic [ref=e92]:
+              - heading "IDE only" [level=3] [ref=e93]: IDE only
+              - generic [ref=e95]:
+                - generic [ref=e96]:
+                  - generic [ref=e97]: "--ide"
+                  - button "Copy" [ref=e98] [cursor=pointer]
+                - code [ref=e100]:
+                  - text: INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+                  - text: curl -fsSL "$INSTALLER_URL" | sudo -E env
+                  - text: ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide
+          - generic [ref=e101]:
+            - heading "Raw GitHub installer" [level=3] [ref=e102]: Raw GitHub installer
+            - generic [ref=e104]:
+              - generic [ref=e105]:
+                - generic [ref=e106]: raw.githubusercontent.com
+                - button "Copy" [ref=e107] [cursor=pointer]
+              - code [ref=e109]:
+                - text: INSTALLER_URL="https://raw.githubusercontent.com/opensnap/antigravity/main/install.sh"
+                - text: curl -fsSL "$INSTALLER_URL" | sudo -E env
+                - text: ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e114]: Update
+          - heading "Keep it current" [level=2] [ref=e116]
+          - paragraph [ref=e117]: The installer registers its URL during setup, so updates work without remembering the original curl command.
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e121]: terminal
+            - button "Copy" [ref=e122] [cursor=pointer]
+          - code [ref=e124]:
+            - text: sudo antigravity-linux update --all
+            - text: sudo update-antigravity
+            - text: sudo update-antigravity-ide
+      - generic [ref=e125]:
+        - generic [ref=e127]: Manage
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - heading "Status and uninstall" [level=2] [ref=e131]
+            - paragraph [ref=e132]: URL-based installs can use the helper command. Local checkout installs can run the same script directly.
+            - generic [ref=e133]:
+              - generic [ref=e134]:
+                - generic [ref=e135]: lifecycle
+                - button "Copy" [ref=e136] [cursor=pointer]
+              - code [ref=e138]:
+                - text: antigravity-linux --status
+                - text: sudo antigravity-linux --uninstall
+                - text: bash install.sh --status
+                - text: sudo bash install.sh --uninstall
+          - generic [ref=e139]:
+            - heading "Installer options" [level=2] [ref=e140]
+            - paragraph [ref=e141]: The helper can print resolved downloads, skip integrations, force reinstalls, and store a specific update URL.
+            - generic [ref=e142]:
+              - generic [ref=e143]:
+                - generic [ref=e144]: options
+                - button "Copy" [ref=e145] [cursor=pointer]
+              - code [ref=e147]:
+                - text: "--desktop install or update only Antigravity 2.0"
+                - text: "--ide install or update only Antigravity IDE"
+                - text: "--all install or update both apps"
+                - text: "--cli run Google's official CLI installer"
+                - text: "--no-nautilus skip Nautilus integration"
+                - text: "--no-apt skip automatic apt installs"
+                - text: "--force reinstall the current version"
+                - text: "--install-url URL store the update helper URL"
+                - text: "--status show helper-managed installs"
+                - text: "--print-downloads print official tarball URLs"
+                - text: "--uninstall remove helper-managed files"
+                - text: "-y, --yes assume yes where possible"
+      - generic [ref=e148]:
+        - generic [ref=e150]: Paths
+        - heading "System locations" [level=2] [ref=e152]
+        - table [ref=e154]:
+          - rowgroup [ref=e155]:
+            - row "Component Path" [ref=e156]:
+              - columnheader "Component" [ref=e157]
+              - columnheader "Path" [ref=e158]
+          - rowgroup [ref=e159]:
+            - row "Antigravity 2.0 /opt/antigravity" [ref=e160]:
+              - cell "Antigravity 2.0" [ref=e161]
+              - cell "/opt/antigravity" [ref=e162]:
+                - code [ref=e163]: /opt/antigravity
+            - row "Antigravity IDE /opt/antigravity-ide" [ref=e164]:
+              - cell "Antigravity IDE" [ref=e165]
+              - cell "/opt/antigravity-ide" [ref=e166]:
+                - code [ref=e167]: /opt/antigravity-ide
+            - row "CLI launchers /usr/local/bin/antigravity, /usr/local/bin/antigravity-ide" [ref=e168]:
+              - cell "CLI launchers" [ref=e169]
+              - cell "/usr/local/bin/antigravity, /usr/local/bin/antigravity-ide" [ref=e170]:
+                - code [ref=e171]: /usr/local/bin/antigravity, /usr/local/bin/antigravity-ide
+            - row "Update helpers /usr/local/bin/antigravity-linux, /usr/local/bin/update-antigravity*" [ref=e172]:
+              - cell "Update helpers" [ref=e173]
+              - cell "/usr/local/bin/antigravity-linux, /usr/local/bin/update-antigravity*" [ref=e174]:
+                - code [ref=e175]: /usr/local/bin/antigravity-linux, /usr/local/bin/update-antigravity*
+            - row "Desktop entries /usr/share/applications/" [ref=e176]:
+              - cell "Desktop entries" [ref=e177]
+              - cell /usr/share/applications/ [ref=e178]:
+                - code [ref=e179]: /usr/share/applications/
+            - row "Icons /usr/share/icons/hicolor/" [ref=e180]:
+              - cell "Icons" [ref=e181]
+              - cell /usr/share/icons/hicolor/ [ref=e182]:
+                - code [ref=e183]: /usr/share/icons/hicolor/
+            - row "Nautilus extension /usr/share/nautilus-python/extensions/open-in-antigravity-ide.py" [ref=e184]:
+              - cell "Nautilus extension" [ref=e185]
+              - cell "/usr/share/nautilus-python/extensions/open-in-antigravity-ide.py" [ref=e186]:
+                - code [ref=e187]: /usr/share/nautilus-python/extensions/open-in-antigravity-ide.py
+      - generic [ref=e188]:
+        - generic [ref=e190]: Systems
+        - heading "Supported Linux environments" [level=2] [ref=e192]
+        - paragraph [ref=e193]: Designed for Debian and Ubuntu systems with apt. Other Linux distributions can run it when the required tools already exist.
+        - generic [ref=e194]:
+          - generic [ref=e195]:
+            - generic [ref=e197]: minimum runtime
+            - code [ref=e199]:
+              - text: glibc >= 2.28
+              - text: glibcxx >= 3.4.25
+              - text: x86_64 or ARM64 Linux tarballs when Google provides them
+          - generic [ref=e200]:
+            - generic [ref=e202]: required tools
+            - code [ref=e204]:
+              - text: bash, curl, tar, python3
+              - text: desktop-file-utils, xdg-utils
+              - text: python3-nautilus for optional Nautilus integration
+      - generic [ref=e205]:
+        - generic [ref=e206]:
+          - img [ref=e207]
+          - generic [ref=e209]: Security
+        - heading "Review before running" [level=2] [ref=e211]
+        - paragraph [ref=e212]:
+          - text: This script runs with
+          - code [ref=e213]: sudo
+          - text: to install system-wide files. Always inspect scripts before executing them with elevated privileges.
+        - generic [ref=e214]:
+          - generic [ref=e215]:
+            - generic [ref=e216]: inspect-then-run.sh
+            - button "Copy" [ref=e217] [cursor=pointer]
+          - code [ref=e219]:
+            - text: curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
+            - text: less install.sh
+            - text: sudo bash install.sh --all
+      - generic [ref=e220]:
+        - generic [ref=e222]: FAQ
+        - heading "Installer questions" [level=2] [ref=e224]
+        - paragraph [ref=e225]: Common setup, update, dependency, source, and option details for the Antigravity Linux helper.
+        - generic [ref=e226]:
+          - group [ref=e227]:
+            - generic "How do I install both Antigravity 2.0 and Antigravity IDE? -" [ref=e228] [cursor=pointer]
+            - generic [ref=e229]:
+              - paragraph [ref=e230]:
+                - text: Use
+                - code [ref=e231]: "--all"
+                - text: . This installs or updates both apps, creates CLI launchers, desktop entries, icons, update helpers, and optional IDE file-manager integration.
+              - generic [ref=e232]:
+                - generic [ref=e233]:
+                  - generic [ref=e234]: install-all.sh
+                  - button "Copy" [ref=e235] [cursor=pointer]
+                - code [ref=e237]:
+                  - text: INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+                  - text: curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+          - group [ref=e238]:
+            - generic "How do I install only Antigravity 2.0? +" [ref=e239] [cursor=pointer]
+          - group [ref=e240]:
+            - generic "How do I install only Antigravity IDE? +" [ref=e241] [cursor=pointer]
+          - group [ref=e242]:
+            - generic "How do I also install Google's official Antigravity CLI? +" [ref=e243] [cursor=pointer]
+          - group [ref=e244]:
+            - generic "How do I skip Nautilus integration? +" [ref=e245] [cursor=pointer]
+          - group [ref=e246]:
+            - generic "How do I prevent automatic apt installs? +" [ref=e247] [cursor=pointer]
+          - group [ref=e248]:
+            - generic "How do I force a reinstall? +" [ref=e249] [cursor=pointer]
+          - group [ref=e250]:
+            - generic "How do I store a custom update URL? +" [ref=e251] [cursor=pointer]
+          - group [ref=e252]:
+            - generic "How do I check install status? +" [ref=e253] [cursor=pointer]
+          - group [ref=e254]:
+            - generic "How do I print the official download URLs without installing? +" [ref=e255] [cursor=pointer]
+          - group [ref=e256]:
+            - generic "How do I update Antigravity? +" [ref=e257] [cursor=pointer]
+          - group [ref=e258]:
+            - generic "How do I uninstall everything this helper manages? +" [ref=e259] [cursor=pointer]
+          - group [ref=e260]:
+            - generic "How do I inspect the script before running it? +" [ref=e261] [cursor=pointer]
+          - group [ref=e262]:
+            - generic "Does this download from official Google sources? +" [ref=e263] [cursor=pointer]
+          - group [ref=e264]:
+            - generic "Which systems and architectures are supported? +" [ref=e265] [cursor=pointer]
+          - group [ref=e266]:
+            - generic "Is this affiliated with Google? +" [ref=e267] [cursor=pointer]
+  - contentinfo [ref=e268]:
+    - generic [ref=e270]:
+      - generic [ref=e271]:
+        - paragraph [ref=e272]: Community installer. Not affiliated with Google.
+        - paragraph [ref=e273]:
+          - text: View source
+          - link "on GitHub" [ref=e274] [cursor=pointer]:
+            - /url: https://github.com/opensnap/antigravity
+        - paragraph [ref=e275]:
+          - text: LLM context
+          - link "llms.txt" [ref=e276] [cursor=pointer]:
+            - /url: /antigravity/llms.txt
+      - generic [ref=e277]:
+        - link "Official Download Page" [ref=e278] [cursor=pointer]:
+          - /url: https://antigravity.google/download
+        - paragraph [ref=e279]: Google Antigravity is a trademark of Google LLC.

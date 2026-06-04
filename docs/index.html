@@ -729,7 +729,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
         </section>
 
         <!-- Update section -->
-        <section id="update" class="section-card p-8 reveal">
+        <section id="update" class="section-card p-8 reveal" id="update">
           <div class="grid lg:grid-cols-2 gap-10">
             <div>
               <div class="flex items-center gap-3 mb-6">
@@ -742,7 +742,7 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               <h2 class="text-3xl font-bold mb-3 text-white">Keep it current</h2>
               <p class="text-slate-400 leading-relaxed">
                 The installer registers its URL during setup, so updates work
-                without remembering the original curl command.
+                without remembering the original curl command. Look at the FAQ section for more details.
               </p>
             </div>
             <div>
@@ -771,7 +771,7 @@ sudo update-antigravity-ide"
         </section>
 
         <!-- Manage section -->
-        <section id="manage" class="section-card p-8 reveal">
+        <section id="manage" class="section-card p-8 reveal" id="manage">
           <div class="flex items-center gap-3 mb-6">
             <span
               class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
@@ -858,7 +858,7 @@ sudo bash install.sh --uninstall"
         </section>
 
         <!-- Paths section -->
-        <section class="section-card p-8 reveal">
+        <section class="section-card p-8 reveal" id="paths">
           <div class="flex items-center gap-3 mb-6">
             <span
               class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
@@ -938,10 +938,8 @@ sudo bash install.sh --uninstall"
           </div>
         </section>
 
-
-
         <!-- Systems section -->
-        <section class="section-card p-8 reveal">
+        <section class="section-card p-8 reveal" id="systems">
           <div class="flex items-center gap-3 mb-6">
             <span
               class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
@@ -982,10 +980,7 @@ sudo bash install.sh --uninstall"
         </section>
 
         <!-- Security section -->
-        <section
-          id="security"
-          class="section-card p-8 border-amber-900/30 bg-[#1c1917] reveal"
-        >
+        <section id="security" class="section-card p-8 border-amber-900/30 bg-[#1c1917] reveal">
           <div class="flex items-center gap-3 mb-6">
             <svg
               width="18"
@@ -1265,7 +1260,7 @@ sudo bash install.sh --all'>Copy</button></div>
     </main>
 
     <!-- Footer -->
-    <footer class="border-t border-slate-800 px-6 py-12">
+    <footer class="border-t border-slate-800 px-6 py-12" id="footer">
       <div class="max-w-6xl mx-auto">
         <div
           class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
