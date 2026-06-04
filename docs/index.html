@@ -317,6 +317,68 @@
           border: 1px solid var(--border);
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       }
+
+      /* FAQ accordion */
+      .faq-item {
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.45);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .faq-item + .faq-item {
+        margin-top: 12px;
+      }
+      .faq-item summary {
+        cursor: pointer;
+        list-style: none;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--fg);
+        font-weight: 600;
+      }
+      .faq-item summary::-webkit-details-marker {
+        display: none;
+      }
+      .faq-item summary::after {
+        content: "+";
+        flex: 0 0 auto;
+        color: var(--accent);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 18px;
+        line-height: 1;
+      }
+      .faq-item[open] summary {
+        border-bottom: 1px solid var(--border);
+        background: rgba(45, 212, 191, 0.06);
+      }
+      .faq-item[open] summary::after {
+        content: "-";
+      }
+      .faq-body {
+        padding: 16px 20px 20px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.75;
+      }
+      .faq-body p + p,
+      .faq-body ul + p,
+      .faq-body p + ul {
+        margin-top: 12px;
+      }
+      .faq-body ul {
+        padding-left: 18px;
+      }
+      .faq-body li + li {
+        margin-top: 6px;
+      }
+      .faq-body code {
+        color: var(--accent);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.92em;
+      }
     </style>
   </head>
   <body class="bg-atmosphere">
@@ -708,8 +770,6 @@ sudo update-antigravity-ide"
           </div>
         </section>
 
-
-
         <!-- Manage section -->
         <section id="manage" class="section-card p-8 reveal">
           <div class="flex items-center gap-3 mb-6">
@@ -982,6 +1042,225 @@ sudo bash install.sh --all'
             </div>
           </div>
         </section>
+
+        <!-- FAQ section -->
+        <section id="faq" class="section-card p-8 reveal">
+          <div class="flex items-center gap-3 mb-6">
+            <span
+              class="text-xs font-semibold text-teal-400 tracking-wider uppercase"
+              >FAQ</span
+            >
+            <div class="flex-1 h-px bg-slate-700"></div>
+          </div>
+          <h2 class="text-3xl font-bold mb-3 text-white">Installer questions</h2>
+          <p class="text-slate-400 leading-relaxed mb-8">
+            Common setup, update, dependency, source, and option details for the Antigravity Linux helper.
+          </p>
+
+          <div>
+            <details class="faq-item" open>
+              <summary>How do I install both Antigravity 2.0 and Antigravity IDE?</summary>
+              <div class="faq-body">
+                <p>Use <code>--all</code>. This installs or updates both apps, creates CLI launchers, desktop entries, icons, update helpers, and optional IDE file-manager integration.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header">
+                    <span class="text-xs text-slate-400 font-mono">install-all.sh</span>
+                    <button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all'>Copy</button>
+                  </div>
+                  <div class="code-content font-mono text-slate-300 text-sm">
+                    <code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--all</span></code>
+                  </div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I install only Antigravity 2.0?</summary>
+              <div class="faq-body">
+                <p>Use the default installer mode or pass <code>--desktop</code>. This installs only the Antigravity 2.0 desktop app and its launcher.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">desktop-only.sh</span><button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --desktop'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--desktop</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I install only Antigravity IDE?</summary>
+              <div class="faq-body">
+                <p>Use <code>--ide</code>. This installs the IDE, its command-line launcher, desktop entry, MIME associations, and optional Nautilus integration.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">ide-only.sh</span><button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--ide</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I also install Google's official Antigravity CLI?</summary>
+              <div class="faq-body">
+                <p>Add <code>--cli</code>. The helper then runs Google's official CLI installer from <code>https://antigravity.google/cli/install.sh</code> for the non-root user when possible.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">with-cli.sh</span><button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all --cli'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--all --cli</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I skip Nautilus integration?</summary>
+              <div class="faq-body">
+                <p>Add <code>--no-nautilus</code>. IDE desktop launchers and MIME entries still install, but the GNOME Files/Nautilus right-click helper is skipped.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">no-nautilus.sh</span><button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all --no-nautilus'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--all --no-nautilus</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I prevent automatic apt installs?</summary>
+              <div class="faq-body">
+                <p>Add <code>--no-apt</code>. Use this when dependencies are already installed or when you want to manage packages manually. On non-apt distributions, the helper checks for required tools instead of installing them.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">no-apt.sh</span><button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all --no-apt'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--all --no-apt</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I force a reinstall?</summary>
+              <div class="faq-body">
+                <p>Add <code>--force</code>. This reinstalls even when the recorded installed version matches the latest resolved version.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">force-reinstall.sh</span><button class="btn-copy" data-copy='INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all --force'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-var">INSTALLER_URL</span>=<span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span><br />curl -fsSL <span class="syn-str">"$INSTALLER_URL"</span> | sudo -E env <span class="syn-var">ANTIGRAVITY_LINUX_INSTALLER_URL</span>=<span class="syn-str">"$INSTALLER_URL"</span> bash -s -- <span class="syn-arg">--all --force</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I store a custom update URL?</summary>
+              <div class="faq-body">
+                <p>Use <code>--install-url URL</code> or set <code>ANTIGRAVITY_LINUX_INSTALLER_URL</code>. The installed <code>antigravity-linux</code> helper uses that URL for future updates.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">custom-url.sh</span><button class="btn-copy" data-copy='sudo bash install.sh --all --install-url https://example.com/install.sh'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-cmd">sudo</span> bash install.sh <span class="syn-arg">--all --install-url https://example.com/install.sh</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I check install status?</summary>
+              <div class="faq-body">
+                <p>Use <code>--status</code>. The installed helper works after a published URL install. The local script works from a repository checkout.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">published-install-status.sh</span><button class="btn-copy" data-copy='antigravity-linux --status'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code>antigravity-linux <span class="syn-arg">--status</span></code></div>
+                </div>
+                <p>Checks helper-managed status after installing from the published URL.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">local-checkout-status.sh</span><button class="btn-copy" data-copy='bash install.sh --status'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code>bash install.sh <span class="syn-arg">--status</span></code></div>
+                </div>
+                <p>Checks status directly from a local checkout when no installer URL was stored.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I print the official download URLs without installing?</summary>
+              <div class="faq-body">
+                <p>Use <code>--print-downloads</code>. Add <code>--all</code>, <code>--desktop</code>, or <code>--ide</code> to choose which official tarball URLs to resolve.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">print-downloads.sh</span><button class="btn-copy" data-copy='bash install.sh --print-downloads --all'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code>bash install.sh <span class="syn-arg">--print-downloads --all</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I update Antigravity?</summary>
+              <div class="faq-body">
+                <p>Use the update helper installed by the published URL flow. There is one command for both apps and separate shortcuts for each product.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">update-all.sh</span><button class="btn-copy" data-copy='sudo antigravity-linux update --all'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-cmd">sudo</span> antigravity-linux update <span class="syn-arg">--all</span></code></div>
+                </div>
+                <p>Updates both Antigravity 2.0 and Antigravity IDE.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">update-desktop.sh</span><button class="btn-copy" data-copy='sudo update-antigravity'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-cmd">sudo</span> update-antigravity</code></div>
+                </div>
+                <p>Updates only the Antigravity 2.0 desktop app.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">update-ide.sh</span><button class="btn-copy" data-copy='sudo update-antigravity-ide'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-cmd">sudo</span> update-antigravity-ide</code></div>
+                </div>
+                <p>Updates only Antigravity IDE.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I uninstall everything this helper manages?</summary>
+              <div class="faq-body">
+                <p>Use <code>--uninstall</code>. It removes helper-managed files from system locations and leaves user settings under home directories untouched.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">published-install-uninstall.sh</span><button class="btn-copy" data-copy='sudo antigravity-linux --uninstall'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-cmd">sudo</span> antigravity-linux <span class="syn-arg">--uninstall</span></code></div>
+                </div>
+                <p>Removes a helper-managed install created from the published URL.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">local-checkout-uninstall.sh</span><button class="btn-copy" data-copy='sudo bash install.sh --uninstall'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code><span class="syn-cmd">sudo</span> bash install.sh <span class="syn-arg">--uninstall</span></code></div>
+                </div>
+                <p>Removes a helper-managed install from a local repository checkout.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>How do I inspect the script before running it?</summary>
+              <div class="faq-body">
+                <p>Download the installer to a local file, inspect it, then run the local copy.</p>
+                <div class="code-block mt-4">
+                  <div class="code-header"><span class="text-xs text-slate-400 font-mono">inspect-then-run.sh</span><button class="btn-copy" data-copy='curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
+less install.sh
+sudo bash install.sh --all'>Copy</button></div>
+                  <div class="code-content font-mono text-slate-300 text-sm"><code>curl -fsSL <span class="syn-str">"https://opensnap.github.io/antigravity/install.sh"</span> -o install.sh<br />less install.sh<br /><span class="syn-cmd">sudo</span> bash install.sh <span class="syn-arg">--all</span></code></div>
+                </div>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>Does this download from official Google sources?</summary>
+              <div class="faq-body">
+                <p>Yes. The helper resolves current Linux tarball URLs from <code>https://antigravity.google/download</code> at install or update time. It does not mirror, modify, or redistribute Google Antigravity binaries.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>Which systems and architectures are supported?</summary>
+              <div class="faq-body">
+                <p>The helper is designed for Debian and Ubuntu systems with <code>apt-get</code> and has been tested on Ubuntu 24.04 LTS. It can run on other Linux distributions when the required tools are already installed. Supported CPU architectures are x86_64/amd64 and aarch64/arm64 when Google provides matching Linux tarballs.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>Is this affiliated with Google?</summary>
+              <div class="faq-body">
+                <p>No. This is a community helper. It is not affiliated with, endorsed by, or supported by Google. Google Antigravity is a trademark of Google LLC.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
       </div>
     </main>
 
@@ -999,7 +1278,7 @@ sudo bash install.sh --all'
               View source <a href="https://github.com/opensnap/antigravity" class="text-blue-400">on GitHub</a>
             </p>
             <p class="text-sm text-slate-400 mt-1">
-              LLM context <a href="/antigravity/llms.txt" class="text-blue-400">llms.txt</a>
+              LLM context: <a href="/antigravity/llms.txt" class="text-blue-400">llms.txt</a>
             </p>
           </div>
           <div>
