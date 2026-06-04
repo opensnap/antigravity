@@ -324,6 +324,7 @@
         background: rgba(15, 23, 42, 0.45);
         border-radius: 8px;
         overflow: hidden;
+        scroll-margin-top: 64px;
       }
       .faq-item + .faq-item {
         margin-top: 12px;
@@ -334,10 +335,13 @@
         padding: 18px 20px;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        gap: 16px;
+        gap: 12px;
         color: var(--fg);
         font-weight: 600;
+      }
+      .faq-item summary > span {
+        flex: 1 1 auto;
+        min-width: 0;
       }
       .faq-item summary::-webkit-details-marker {
         display: none;
@@ -349,6 +353,23 @@
         font-family: "JetBrains Mono", monospace;
         font-size: 18px;
         line-height: 1;
+      }
+      .faq-link {
+        flex: 0 0 auto;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        line-height: 1;
+        padding: 6px 8px;
+        text-decoration: none;
+        transition: all 0.15s;
+      }
+      .faq-link:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-dim);
       }
       .faq-item[open] summary {
         border-bottom: 1px solid var(--border);
@@ -412,7 +433,8 @@
             >Security</a
           >
           <a
-            href="https://antigravity.google/download"
+            target="_blank"
+            href="https://antigravity.google/docs/getting-started"
             class="px-3 py-1 bg-white/5 rounded-full hover:bg-white/10 transition-colors"
             >Official Docs</a
           >
@@ -452,20 +474,6 @@
 
             <div class="flex flex-wrap gap-4">
               <a href="#install" class="btn-primary">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
                 Get the command
               </a>
               <a href="https://github.com/opensnap/antigravity" class="btn-ghost flex flex-wrap gap-4" target="_blank">
@@ -936,6 +944,9 @@ sudo bash install.sh --uninstall"
               </tbody>
             </table>
           </div>
+          <p class="border-t border-teal-800 pt-4 mt-4 text-slate-300">
+            <a href="#faq-package-format"># Does this give me a standardized package like Flatpak or .deb?</a>
+          </p>
         </section>
 
         <!-- Systems section -->
@@ -1053,8 +1064,8 @@ sudo bash install.sh --all'
           </p>
 
           <div>
-            <details class="faq-item" open>
-              <summary>How do I install both Antigravity 2.0 and Antigravity IDE?</summary>
+            <details class="faq-item" id="faq-install-all" open>
+              <summary><span>How do I install both Antigravity 2.0 and Antigravity IDE?</span><a class="faq-link" href="#faq-install-all" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use <code>--all</code>. This installs or updates both apps, creates CLI launchers, desktop entries, icons, update helpers, and optional IDE file-manager integration.</p>
                 <div class="code-block mt-4">
@@ -1070,8 +1081,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I install only Antigravity 2.0?</summary>
+            <details class="faq-item" id="faq-install-desktop">
+              <summary><span>How do I install only Antigravity 2.0?</span><a class="faq-link" href="#faq-install-desktop" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use the default installer mode or pass <code>--desktop</code>. This installs only the Antigravity 2.0 desktop app and its launcher.</p>
                 <div class="code-block mt-4">
@@ -1082,8 +1093,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I install only Antigravity IDE?</summary>
+            <details class="faq-item" id="faq-install-ide">
+              <summary><span>How do I install only Antigravity IDE?</span><a class="faq-link" href="#faq-install-ide" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use <code>--ide</code>. This installs the IDE, its command-line launcher, desktop entry, MIME associations, and optional Nautilus integration.</p>
                 <div class="code-block mt-4">
@@ -1094,8 +1105,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I also install Google's official Antigravity CLI?</summary>
+            <details class="faq-item" id="faq-install-cli">
+              <summary><span>How do I also install Google's official Antigravity CLI?</span><a class="faq-link" href="#faq-install-cli" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Add <code>--cli</code>. The helper then runs Google's official CLI installer from <code>https://antigravity.google/cli/install.sh</code> for the non-root user when possible.</p>
                 <div class="code-block mt-4">
@@ -1106,8 +1117,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I skip Nautilus integration?</summary>
+            <details class="faq-item" id="faq-skip-nautilus">
+              <summary><span>How do I skip Nautilus integration?</span><a class="faq-link" href="#faq-skip-nautilus" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Add <code>--no-nautilus</code>. IDE desktop launchers and MIME entries still install, but the GNOME Files/Nautilus right-click helper is skipped.</p>
                 <div class="code-block mt-4">
@@ -1118,8 +1129,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I prevent automatic apt installs?</summary>
+            <details class="faq-item" id="faq-no-apt">
+              <summary><span>How do I prevent automatic apt installs?</span><a class="faq-link" href="#faq-no-apt" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Add <code>--no-apt</code>. Use this when dependencies are already installed or when you want to manage packages manually. On non-apt distributions, the helper checks for required tools instead of installing them.</p>
                 <div class="code-block mt-4">
@@ -1130,8 +1141,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I force a reinstall?</summary>
+            <details class="faq-item" id="faq-force-reinstall">
+              <summary><span>How do I force a reinstall?</span><a class="faq-link" href="#faq-force-reinstall" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Add <code>--force</code>. This reinstalls even when the recorded installed version matches the latest resolved version.</p>
                 <div class="code-block mt-4">
@@ -1142,8 +1153,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I store a custom update URL?</summary>
+            <details class="faq-item" id="faq-install-url">
+              <summary><span>How do I store a custom update URL?</span><a class="faq-link" href="#faq-install-url" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use <code>--install-url URL</code> or set <code>ANTIGRAVITY_LINUX_INSTALLER_URL</code>. The installed <code>antigravity-linux</code> helper uses that URL for future updates.</p>
                 <div class="code-block mt-4">
@@ -1153,8 +1164,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I check install status?</summary>
+            <details class="faq-item" id="faq-status">
+              <summary><span>How do I check install status?</span><a class="faq-link" href="#faq-status" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use <code>--status</code>. The installed helper works after a published URL install. The local script works from a repository checkout.</p>
                 <div class="code-block mt-4">
@@ -1170,8 +1181,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I print the official download URLs without installing?</summary>
+            <details class="faq-item" id="faq-print-downloads">
+              <summary><span>How do I print the official download URLs without installing?</span><a class="faq-link" href="#faq-print-downloads" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use <code>--print-downloads</code>. Add <code>--all</code>, <code>--desktop</code>, or <code>--ide</code> to choose which official tarball URLs to resolve.</p>
                 <div class="code-block mt-4">
@@ -1181,8 +1192,17 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I update Antigravity?</summary>
+            <details class="faq-item" id="faq-package-format">
+              <summary><span>Does this give me a standardized package like Flatpak or .deb?</span><a class="faq-link" href="#faq-package-format" aria-label="Link to this FAQ">#</a></summary>
+              <div class="faq-body">
+                <p>This helper gives you a defined install and uninstall path, but it is not a Flatpak or .deb package. It installs into standard system locations, creates predictable launchers, and removes the helper-managed files with <code>--uninstall</code>.</p>
+                <p class="my-8"><strong># See <a href="#paths">PATHS (System locations)</a>.</strong></p>
+                <p>If you specifically need package-manager integration, sandboxing, and distribution-native dependency metadata, Flatpak or a `.deb` package is the better choice. You may want to wait and see whether Google releases an official package for Antigravity 2. This project provides a simpler community-maintained installation path for users who prefer a single command, official Google tarballs, and an easily reversible system-wide installation.</p>
+              </div>
+            </details>
+
+            <details class="faq-item" id="faq-update">
+              <summary><span>How do I update Antigravity?</span><a class="faq-link" href="#faq-update" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use the update helper installed by the published URL flow. There is one command for both apps and separate shortcuts for each product.</p>
                 <div class="code-block mt-4">
@@ -1203,8 +1223,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I uninstall everything this helper manages?</summary>
+            <details class="faq-item" id="faq-uninstall">
+              <summary><span>How do I uninstall everything this helper manages?</span><a class="faq-link" href="#faq-uninstall" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Use <code>--uninstall</code>. It removes helper-managed files from system locations and leaves user settings under home directories untouched.</p>
                 <div class="code-block mt-4">
@@ -1220,8 +1240,8 @@ curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INST
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>How do I inspect the script before running it?</summary>
+            <details class="faq-item" id="faq-inspect">
+              <summary><span>How do I inspect the script before running it?</span><a class="faq-link" href="#faq-inspect" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Download the installer to a local file, inspect it, then run the local copy.</p>
                 <div class="code-block mt-4">
@@ -1233,22 +1253,22 @@ sudo bash install.sh --all'>Copy</button></div>
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>Does this download from official Google sources?</summary>
+            <details class="faq-item" id="faq-official-sources">
+              <summary><span>Does this download from official Google sources?</span><a class="faq-link" href="#faq-official-sources" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>Yes. The helper resolves current Linux tarball URLs from <code>https://antigravity.google/download</code> at install or update time. It does not mirror, modify, or redistribute Google Antigravity binaries.</p>
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>Which systems and architectures are supported?</summary>
+            <details class="faq-item" id="faq-support">
+              <summary><span>Which systems and architectures are supported?</span><a class="faq-link" href="#faq-support" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>The helper is designed for Debian and Ubuntu systems with <code>apt-get</code> and has been tested on Ubuntu 24.04 LTS. It can run on other Linux distributions when the required tools are already installed. Supported CPU architectures are x86_64/amd64 and aarch64/arm64 when Google provides matching Linux tarballs.</p>
               </div>
             </details>
 
-            <details class="faq-item">
-              <summary>Is this affiliated with Google?</summary>
+            <details class="faq-item" id="faq-affiliation">
+              <summary><span>Is this affiliated with Google?</span><a class="faq-link" href="#faq-affiliation" aria-label="Link to this FAQ">#</a></summary>
               <div class="faq-body">
                 <p>No. This is a community helper. It is not affiliated with, endorsed by, or supported by Google. Google Antigravity is a trademark of Google LLC.</p>
               </div>
@@ -1280,6 +1300,7 @@ sudo bash install.sh --all'>Copy</button></div>
             <a
               href="https://antigravity.google/download"
               rel="noopener"
+              target="_blank"
               class="nav-link text-sm text-blue-400"
               >Official Download Page</a
             >
@@ -1330,13 +1351,42 @@ sudo bash install.sh --all'>Copy</button></div>
         });
       });
 
-      // Smooth scroll for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      const openFaqFromHash = (hash, behavior = "smooth") => {
+        if (!hash) return false;
+        const target = document.querySelector(hash);
+        if (!target) return false;
+        if (target.matches("details.faq-item")) {
+          target.open = true;
+        }
+        const top = target.getBoundingClientRect().top + window.scrollY - 64;
+        window.scrollTo({ top: Math.max(top, 0), behavior });
+        return true;
+      };
+
+      document.querySelectorAll(".faq-link").forEach((link) => {
         link.addEventListener("click", (e) => {
-          const target = document.querySelector(link.getAttribute("href"));
+          e.preventDefault();
+          e.stopPropagation();
+          history.pushState(null, "", link.getAttribute("href"));
+          openFaqFromHash(link.hash);
+        });
+      });
+
+      window.addEventListener("hashchange", () => {
+        openFaqFromHash(window.location.hash);
+      });
+
+      openFaqFromHash(window.location.hash, "auto");
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]:not(.faq-link)').forEach((link) => {
+        link.addEventListener("click", (e) => {
+          const hash = link.getAttribute("href");
+          const target = document.querySelector(hash);
           if (target) {
             e.preventDefault();
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.pushState(null, "", hash);
+            openFaqFromHash(hash);
           }
         });
       });
