@@ -4,3 +4,4 @@
 *.log
 /dist/
 /.cache/
+/.playwright-mcp/
