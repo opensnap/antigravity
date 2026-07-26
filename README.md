@@ -49,28 +49,28 @@ Install Antigravity 2.0 and the IDE:
 
 ```bash
 INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+curl -fsSL "$INSTALLER_URL" | sudo env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 ```
 
 Install only Antigravity 2.0 desktop app:
 
 ```bash
 INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s --
+curl -fsSL "$INSTALLER_URL" | sudo env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s --
 ```
 
 Install only Antigravity IDE:
 
 ```bash
 INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide
+curl -fsSL "$INSTALLER_URL" | sudo env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide
 ```
 
 ## Quick install from raw GitHub
 
 ```bash
 INSTALLER_URL="https://raw.githubusercontent.com/opensnap/antigravity/main/install.sh"
-curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+curl -fsSL "$INSTALLER_URL" | sudo env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 ```
 
 ## Update

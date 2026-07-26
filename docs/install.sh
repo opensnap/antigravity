@@ -55,7 +55,7 @@ Options:
 
 Recommended GitHub Pages one-liner:
   INSTALLER_URL="https://YOUR_GITHUB_USERNAME.github.io/antigravity-linux/install.sh"; \
-  curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
+  curl -fsSL "$INSTALLER_URL" | sudo env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 
 Update after install:
   sudo antigravity-linux update --all
@@ -102,9 +102,9 @@ require_root_or_reexec() {
     return 0
   fi
   if command -v sudo >/dev/null 2>&1 && [ -n "${BASH_SOURCE[0]:-}" ] && [ -r "${BASH_SOURCE[0]}" ] && [ "${BASH_SOURCE[0]}" != "bash" ] && [ "${BASH_SOURCE[0]}" != "sh" ]; then
-    exec sudo -E env "ANTIGRAVITY_LINUX_INSTALLER_URL=$INSTALLER_URL" bash "${BASH_SOURCE[0]}" "${ORIGINAL_ARGS[@]}"
+    exec sudo env "ANTIGRAVITY_LINUX_INSTALLER_URL=$INSTALLER_URL" bash "${BASH_SOURCE[0]}" "${ORIGINAL_ARGS[@]}"
   fi
-  err "System-wide install needs root. Use: curl -fsSL <installer-url> | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL=<installer-url> bash"
+  err "System-wide install needs root. Use: curl -fsSL <installer-url> | sudo env ANTIGRAVITY_LINUX_INSTALLER_URL=<installer-url> bash"
 }
 
 install_deps_debian() {
@@ -125,40 +125,42 @@ install_deps_debian() {
 resolve_main_bundle() {
   local tmpdir="$1"
   local html="$tmpdir/download.html"
-  local js="$tmpdir/download.js"
+  local bundle="$tmpdir/bundle.txt"
   curl -fsSL --compressed --retry 3 -o "$html" "$DOWNLOAD_PAGE"
-  local main_js_url
-  main_js_url=$(python3 - "$html" "$DOWNLOAD_PAGE" <<'PY'
-import re, sys
+  cp "$html" "$bundle"
+  
+  python3 - "$html" "$DOWNLOAD_PAGE" "$tmpdir" <<'PY' || true
+import re, sys, subprocess
 from pathlib import Path
 from urllib.parse import urljoin
-html = Path(sys.argv[1]).read_text(errors='replace')
+html_path = Path(sys.argv[1])
 page = sys.argv[2]
-# Prefer the application bundle that contains the download data.
-matches = re.findall(r'(?:src|href)=["\']([^"\']*main-[^"\']+\.js)["\']', html)
-if not matches:
-    matches = re.findall(r'(?:src|href)=["\']([^"\']+\.js)["\']', html)
-if not matches:
-    raise SystemExit('Could not find JavaScript bundle on the official Antigravity download page')
-print(urljoin(page, matches[-1]))
+tmpdir = Path(sys.argv[3])
+html = html_path.read_text(errors='replace')
+
+matches = re.findall(r'(?:src|href)=["\']([^"\']+\.js)["\']', html)
+for m in matches[:10]:
+    full_url = urljoin(page, m)
+    res = subprocess.run(["curl", "-fsSL", "--compressed", "--retry", "3", full_url], capture_output=True, text=True)
+    if res.stdout:
+        with (tmpdir / "bundle.txt").open("a", encoding="utf-8", errors="replace") as f:
+            f.write("\n" + res.stdout)
 PY
-)
-  curl -fsSL --compressed --retry 3 -o "$js" "$main_js_url"
-  printf '%s\n' "$js"
+  printf '%s\n' "$bundle"
 }
 
 resolve_download_from_bundle() {
-  local js="$1"
+  local bundle_file="$1"
   local product="$2"
-  python3 - "$js" "$AG_PLATFORM" "$product" <<'PY'
+  python3 - "$bundle_file" "$AG_PLATFORM" "$product" <<'PY'
 import html, re, sys
 from pathlib import Path
 from urllib.parse import unquote
+
 bundle = html.unescape(Path(sys.argv[1]).read_text(errors='replace'))
 platform = sys.argv[2]
 product = sys.argv[3]
 
-# Normalize escaped slashes sometimes found in JS string literals.
 text = bundle.replace('\\/', '/')
 
 def fail(msg):
@@ -166,7 +168,6 @@ def fail(msg):
 
 def version_from_url(url):
     decoded = unquote(url)
-    # Known current layouts include antigravity-hub/<version>/ and stable/<version>/.
     for pattern in (r'/antigravity-hub/([^/]+)/', r'/stable/([^/]+)/', r'/(\d+\.\d+\.\d+(?:-[^/]+)?)/'):
         m = re.search(pattern, decoded)
         if m:
@@ -446,11 +447,7 @@ if [ -z "\$SCRIPT_URL" ]; then
   echo "Reinstall with ANTIGRAVITY_LINUX_INSTALLER_URL set, or run install.sh locally." >&2
   exit 1
 fi
-if [ "\$(id -u)" -eq 0 ]; then
-  curl -fsSL "\$SCRIPT_URL" | env ANTIGRAVITY_LINUX_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
-else
-  curl -fsSL "\$SCRIPT_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
-fi
+exec curl -fsSL "\$SCRIPT_URL" | env ANTIGRAVITY_LINUX_INSTALLER_URL="\$SCRIPT_URL" bash -s -- "\$@"
 SH
   chmod +x /usr/local/bin/antigravity-linux
   cat > /usr/local/bin/update-antigravity <<'SH'
@@ -504,7 +501,7 @@ print_downloads() {
     read -r version url < <(resolve_ide_download "$js")
     log "Antigravity IDE $version: $url"
   fi
-  rm -rf "$tmpdir"
+  rm -rf "${tmpdir:-}"
 }
 
 print_success_summary() {
@@ -564,7 +561,7 @@ main() {
   mkdir -p "$tmp_parent"
   local tmpdir
   tmpdir=$(mktemp -d "$tmp_parent/$PROJECT_NAME.XXXXXX")
-  trap 'rm -rf "$tmpdir"' EXIT
+  trap 'rm -rf "${tmpdir:-}"' EXIT
   local js
   js=$(resolve_main_bundle "$tmpdir")
   [ "$INSTALL_DESKTOP" -eq 1 ] && install_desktop_app "$tmpdir" "$js"
