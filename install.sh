@@ -18,6 +18,8 @@ DO_STATUS=0
 DO_PRINT_DOWNLOADS=0
 FORCE=0
 YES=0
+INSTALLER_VERSION="1.1.0"
+SKIP_SELF_UPDATE=0
 INSTALLER_URL="${ANTIGRAVITY_LINUX_INSTALLER_URL:-}"
 
 log() { printf '%s\n' "$*"; }
@@ -80,6 +82,7 @@ while [ $# -gt 0 ]; do
     --status) DO_STATUS=1 ;;
     --print-downloads) DO_PRINT_DOWNLOADS=1 ;;
     --uninstall) DO_UNINSTALL=1 ;;
+    --no-self-update) SKIP_SELF_UPDATE=1 ;;
     -y|--yes) YES=1 ;;
     -h|--help) usage; exit 0 ;;
     *) err "Unknown option: $1" ;;
@@ -126,47 +129,159 @@ resolve_main_bundle() {
   local tmpdir="$1"
   local html="$tmpdir/download.html"
   local js="$tmpdir/download.js"
-  curl -fsSL --compressed --retry 3 -o "$html" "$DOWNLOAD_PAGE"
-  local main_js_url
-  main_js_url=$(python3 - "$html" "$DOWNLOAD_PAGE" <<'PY'
+
+  curl -fsSL -L -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64)" --compressed --retry 3 -o "$html" "$DOWNLOAD_PAGE" || true
+
+  python3 - "$html" "$DOWNLOAD_PAGE" "$tmpdir" <<'PY'
 import re, sys
 from pathlib import Path
 from urllib.parse import urljoin
-html = Path(sys.argv[1]).read_text(errors='replace')
+import urllib.request
+
+html_path = Path(sys.argv[1])
 page = sys.argv[2]
-# Prefer the application bundle that contains the download data.
-matches = re.findall(r'(?:src|href)=["\']([^"\']*main-[^"\']+\.js)["\']', html)
-if not matches:
-    matches = re.findall(r'(?:src|href)=["\']([^"\']+\.js)["\']', html)
-if not matches:
-    raise SystemExit('Could not find JavaScript bundle on the official Antigravity download page')
-print(urljoin(page, matches[-1]))
+tmpdir = Path(sys.argv[3])
+js_out = tmpdir / "download.js"
+
+if not html_path.exists():
+    sys.exit(0)
+
+html = html_path.read_text(errors='replace')
+
+js_urls = re.findall(r'(?:src|href)=["\']([^"\']+\.js(?:\?[^"\']*)?)["\']', html)
+js_urls += re.findall(r'["\']([^"\']+\/_astro\/[^"\']+\.js)["\']', html)
+js_urls += re.findall(r'["\']([^"\']+\/_next\/static\/[^"\']+\.js)["\']', html)
+
+combined_content = [html]
+
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)'}
+for rel_url in set(js_urls):
+    if rel_url.startswith('http://') or rel_url.startswith('https://'):
+        full_url = rel_url
+    else:
+        full_url = urljoin(page, rel_url)
+    try:
+        req = urllib.request.Request(full_url, headers=headers)
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            combined_content.append(resp.read().decode('utf-8', errors='replace'))
+    except Exception:
+        pass
+
+js_out.write_text("\n".join(combined_content), encoding='utf-8')
+PY
+
+  if [ -s "$js" ]; then
+    printf '%s\n' "$js"
+  else
+    printf '%s\n' "$html"
+  fi
+}
+
+prompt_manual_url() {
+  local product="$1"
+  local platform="$2"
+  local url=""
+
+  printf '\n' >&2
+  warn "Automatic download link resolution failed for Antigravity ${product} (${platform})."
+  printf '%s\n' "================================================================================" >&2
+  printf '%s\n' "MANUAL ACTION REQUIRED:" >&2
+  printf '%s\n' "1. Open the official download page in your browser:" >&2
+  printf '%s\n' "   ${DOWNLOAD_PAGE}" >&2
+  printf '%s\n' "2. Right-click the download link for ${product} (${platform}) and select 'Copy Link Address'." >&2
+  printf '%s\n' "================================================================================" >&2
+  printf '\n' >&2
+
+  if [ -e /dev/tty ]; then
+    printf "Please paste the direct download URL here: " > /dev/tty
+    read -r url < /dev/tty
+  elif [ -t 0 ]; then
+    printf "Please paste the direct download URL here: " >&2
+    read -r url
+  fi
+
+  url=$(echo "$url" | xargs)
+
+  if [ -z "$url" ]; then
+    err "No download URL provided."
+  fi
+
+  local version
+  version=$(python3 - "$url" <<'PY'
+import re, sys
+from urllib.parse import unquote
+url = unquote(sys.argv[1])
+for pattern in (r'/antigravity-hub/([^/]+)/', r'/stable/([^/]+)/', r'/(\d+\.\d+\.\d+(?:-[^/]+)?)/'):
+    m = re.search(pattern, url)
+    if m:
+        print(m.group(1).split('-', 1)[0])
+        sys.exit(0)
+print('unknown')
 PY
 )
-  curl -fsSL --compressed --retry 3 -o "$js" "$main_js_url"
-  printf '%s\n' "$js"
+
+  printf '%s %s\n' "$version" "$url"
 }
 
 resolve_download_from_bundle() {
   local js="$1"
   local product="$2"
-  python3 - "$js" "$AG_PLATFORM" "$product" <<'PY'
+
+  if [ "$product" = "ide" ] && [ -n "${ANTIGRAVITY_IDE_URL:-}" ]; then
+    local version
+    version=$(python3 - "$ANTIGRAVITY_IDE_URL" <<'PY'
+import re, sys
+from urllib.parse import unquote
+url = unquote(sys.argv[1])
+for pattern in (r'/antigravity-hub/([^/]+)/', r'/stable/([^/]+)/', r'/(\d+\.\d+\.\d+(?:-[^/]+)?)/'):
+    m = re.search(pattern, url)
+    if m:
+        print(m.group(1).split('-', 1)[0])
+        sys.exit(0)
+print('unknown')
+PY
+)
+    printf '%s %s\n' "$version" "$ANTIGRAVITY_IDE_URL"
+    return 0
+  fi
+
+  if [ "$product" = "desktop" ] && [ -n "${ANTIGRAVITY_DESKTOP_URL:-}" ]; then
+    local version
+    version=$(python3 - "$ANTIGRAVITY_DESKTOP_URL" <<'PY'
+import re, sys
+from urllib.parse import unquote
+url = unquote(sys.argv[1])
+for pattern in (r'/antigravity-hub/([^/]+)/', r'/stable/([^/]+)/', r'/(\d+\.\d+\.\d+(?:-[^/]+)?)/'):
+    m = re.search(pattern, url)
+    if m:
+        print(m.group(1).split('-', 1)[0])
+        sys.exit(0)
+print('unknown')
+PY
+)
+    printf '%s %s\n' "$version" "$ANTIGRAVITY_DESKTOP_URL"
+    return 0
+  fi
+
+  local result=""
+  if [ -f "$js" ] && [ -s "$js" ]; then
+    result=$(python3 - "$js" "$AG_PLATFORM" "$product" <<'PY'
 import html, re, sys
 from pathlib import Path
 from urllib.parse import unquote
-bundle = html.unescape(Path(sys.argv[1]).read_text(errors='replace'))
+
+bundle_path = Path(sys.argv[1])
+if not bundle_path.exists():
+    sys.exit(0)
+
+bundle = html.unescape(bundle_path.read_text(errors='replace'))
 platform = sys.argv[2]
 product = sys.argv[3]
 
-# Normalize escaped slashes sometimes found in JS string literals.
 text = bundle.replace('\\/', '/')
-
-def fail(msg):
-    raise SystemExit(msg)
 
 def version_from_url(url):
     decoded = unquote(url)
-    # Known current layouts include antigravity-hub/<version>/ and stable/<version>/.
     for pattern in (r'/antigravity-hub/([^/]+)/', r'/stable/([^/]+)/', r'/(\d+\.\d+\.\d+(?:-[^/]+)?)/'):
         m = re.search(pattern, decoded)
         if m:
@@ -176,15 +291,11 @@ def version_from_url(url):
 if product == 'desktop':
     marker = 'id:"antigravity-2"'
     next_marker = 'id:"antigravity-cli"'
-    filename_patterns = [r'Antigravity\.tar\.gz']
-    label = 'Antigravity 2.0'
+    filename_patterns = [r'Antigravity\.tar\.gz', r'Antigravity.*\.tar\.gz']
 elif product == 'ide':
     marker = 'id:"antigravity-ide"'
     next_marker = 'id:"antigravity-sdk"'
-    filename_patterns = [r'Antigravity%20IDE\.tar\.gz', r'Antigravity\+IDE\.tar\.gz', r'Antigravity IDE\.tar\.gz']
-    label = 'Antigravity IDE'
-else:
-    fail(f'Unknown product: {product}')
+    filename_patterns = [r'Antigravity%20IDE\.tar\.gz', r'Antigravity\+IDE\.tar\.gz', r'Antigravity IDE\.tar\.gz', r'Antigravity.*IDE.*\.tar\.gz']
 
 sections = []
 start = text.find(marker)
@@ -195,15 +306,38 @@ sections.append(text)
 
 for section in sections:
     for filename_re in filename_patterns:
-        pattern = r'https?://[^"\'\s<>)]*/' + re.escape(platform) + r'/' + filename_re
+        pattern = r'https?://[^"\'\s<>)]*/' + re.escape(platform) + r'/[^"\'\s<>)]*' + filename_re
         matches = re.findall(pattern, section)
         if matches:
             url = matches[-1]
             print(version_from_url(url), url)
             sys.exit(0)
 
-fail(f'Could not find official {label} tarball for {platform} in Google download bundle')
+if product == 'ide':
+    broad_pattern = r'https?://[^\s"\'<>)]*?' + re.escape(platform) + r'[^\s"\'<>)]*?IDE[^\s"\'<>)]*?\.tar\.gz'
+else:
+    broad_pattern = r'https?://[^\s"\'<>)]*?' + re.escape(platform) + r'[^\s"\'<>)]*?Antigravity(?![^\s"\'<>)]*IDE)[^\s"\'<>)]*?\.tar\.gz'
+
+matches = re.findall(broad_pattern, text, re.IGNORECASE)
+if not matches and product == 'desktop':
+    broad_pattern = r'https?://[^\s"\'<>)]*?' + re.escape(platform) + r'[^\s"\'<>)]*?\.tar\.gz'
+    all_matches = re.findall(broad_pattern, text, re.IGNORECASE)
+    matches = [u for u in all_matches if 'IDE' not in u]
+
+if matches:
+    url = matches[-1]
+    print(version_from_url(url), url)
+    sys.exit(0)
+
 PY
+)
+  fi
+
+  if [ -z "$result" ]; then
+    result=$(prompt_manual_url "$product" "$AG_PLATFORM")
+  fi
+
+  printf '%s\n' "$result"
 }
 
 resolve_desktop_download() { resolve_download_from_bundle "$1" desktop; }
@@ -544,7 +678,34 @@ uninstall_all() {
   log "Removed helper-managed Antigravity files. User settings under home directories were left untouched."
 }
 
+check_self_update() {
+  [ "$SKIP_SELF_UPDATE" -eq 1 ] && return 0
+  
+  local remote_url="${INSTALLER_URL:-https://opensnap.github.io/antigravity/install.sh}"
+  
+  local remote_script
+  remote_script=$(curl -fsSL -L -m 5 "$remote_url" 2>/dev/null) || return 0
+  
+  local remote_version
+  remote_version=$(echo "$remote_script" | sed -n 's/^INSTALLER_VERSION=["'\''"]\([^"'\'']*\)["'\''"]/\1/p' | head -n 1)
+
+  if [ -n "$remote_version" ] && [ "$remote_version" != "$INSTALLER_VERSION" ]; then
+    log "A newer installer script version is available (local: v$INSTALLER_VERSION, remote: v$remote_version)."
+    log "Updating installer script from $remote_url..."
+    
+    if [ -n "${BASH_SOURCE[0]:-}" ] && [ -w "${BASH_SOURCE[0]}" ]; then
+      printf '%s\n' "$remote_script" > "${BASH_SOURCE[0]}"
+      log "Installer script updated. Re-executing..."
+      exec bash "${BASH_SOURCE[0]}" "${ORIGINAL_ARGS[@]}" --no-self-update
+    else
+      exec bash -c "$remote_script" bash "${ORIGINAL_ARGS[@]}" --no-self-update
+    fi
+  fi
+}
+
 main() {
+  check_self_update
+
   if [ "$DO_STATUS" -eq 1 ]; then
     print_status
     exit 0
@@ -564,7 +725,7 @@ main() {
   mkdir -p "$tmp_parent"
   local tmpdir
   tmpdir=$(mktemp -d "$tmp_parent/$PROJECT_NAME.XXXXXX")
-  trap 'rm -rf "$tmpdir"' EXIT
+  trap 'rm -rf "${tmpdir:-}"' EXIT
   local js
   js=$(resolve_main_bundle "$tmpdir")
   [ "$INSTALL_DESKTOP" -eq 1 ] && install_desktop_app "$tmpdir" "$js"
