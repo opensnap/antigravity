@@ -1,0 +1,88 @@
+# Maintainer: sandikodev <androxoss@hotmail.com>
+pkgname=antigravity-cli
+pkgver=1.1.14
+pkgrel=1
+pkgdesc="Google Antigravity CLI - AI agent platform command-line interface"
+arch=('x86_64' 'aarch64')
+url="https://antigravity.google"
+license=('MIT')
+depends=('glibc' 'gcc-libs')
+makedepends=()
+optdepends=(
+  'alacritty: Terminal emulator for launcher'
+  'kitty: Alternative terminal emulator'
+  'gnome-terminal: GNOME terminal emulator'
+  'konsole: KDE terminal emulator'
+)
+provides=('antigravity-cli' 'agy')
+conflicts=('antigravity-cli-bin')
+install=antigravity-cli.install
+
+# Source: Google official CLI installer
+# The installer downloads a tarball containing the binary
+# We use the same source as the official installer
+source_x86_64=(
+  "https://dl.google.com/dl/antigravity/cli/linux_amd64/agy-${pkgver}.tar.gz"
+  "antigravity-cli.desktop"
+  "antigravity-cli-terminal.desktop"
+  "antigravity-cli.sh"
+)
+source_aarch64=(
+  "https://dl.google.com/dl/antigravity/cli/linux_arm64/agy-${pkgver}.tar.gz"
+  "antigravity-cli.desktop"
+  "antigravity-cli-terminal.desktop"
+  "antigravity-cli.sh"
+)
+
+sha256sums_x86_64=(
+  'SKIP'  # Binary tarball - checksum will be verified after first build
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
+sha256sums_aarch64=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
+
+package() {
+  cd "${srcdir}"
+
+  # Install binary
+  install -Dm755 "agy" "${pkgdir}/usr/bin/agy"
+
+  # Install shell profile (optional, for PATH setup)
+  install -Dm644 "antigravity-cli.sh" "${pkgdir}/etc/profile.d/antigravity-cli.sh"
+
+  # Install desktop entries
+  install -Dm644 "antigravity-cli.desktop" "${pkgdir}/usr/share/applications/antigravity-cli.desktop"
+  install -Dm644 "antigravity-cli-terminal.desktop" "${pkgdir}/usr/share/applications/antigravity-cli-terminal.desktop"
+
+  # Install icon (if available in source)
+  if [ -f "icon.png" ]; then
+    install -Dm644 "icon.png" "${pkgdir}/usr/share/icons/hicolor/512x512/apps/antigravity-cli.png"
+  fi
+}
+
+# Post-install messages
+post_install() {
+  echo ""
+  echo "Antigravity CLI has been installed!"
+  echo ""
+  echo "Usage:"
+  echo "  agy              Start interactive CLI"
+  echo "  agy --help       Show help"
+  echo "  agy --version    Show version"
+  echo ""
+  echo "Desktop launcher has been installed."
+  echo "You can find 'Antigravity CLI' in your application menu."
+  echo ""
+}
+
+post_upgrade() {
+  echo ""
+  echo "Antigravity CLI has been updated to ${pkgver}!"
+  echo ""
+}

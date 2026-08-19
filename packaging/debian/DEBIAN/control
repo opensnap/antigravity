@@ -1,0 +1,24 @@
+Package: antigravity-cli
+Version: 1.1.14-1
+Section: devel
+Priority: optional
+Architecture: amd64
+Depends: libc6 (>= 2.28), libstdc++6 (>= 12)
+Recommends: alacritty | kitty | gnome-terminal | konsole | xfce4-terminal | xterm
+Suggests: alacritty
+Installed-Size: 197
+Maintainer: sandikodev <androxoss@hotmail.com>
+Homepage: https://antigravity.google
+Description: Google Antigravity CLI - AI agent platform
+ Antigravity is Google's AI agent platform. This package provides the
+ command-line interface (agy) for interacting with Antigravity agents.
+ .
+ Features:
+  - Interactive AI agent sessions
+  - Multi-turn conversations
+  - Tool permission management
+  - Workspace integration
+  - Model selection and configuration
+ .
+ Install the desktop launcher for application menu integration:
+  sudo apt install antigravity-cli-launcher

@@ -1,0 +1,37 @@
+# This is an example .SRCINFO file.
+# To generate this file, run: makepkg --printsrcinfo > .SRCINFO
+# or: bash makepkg --printsrcinfo > .SRCINFO
+
+pkgbase = antigravity-cli
+	pkgdesc = Google Antigravity CLI - AI agent platform command-line interface
+	pkgver = 1.1.14
+	pkgrel = 1
+	url = https://antigravity.google
+	arch = x86_64
+	arch = aarch64
+	license = MIT
+	depends = glibc
+	depends = gcc-libs
+	optdepends = alacritty: Terminal emulator for launcher
+	optdepends = kitty: Alternative terminal emulator
+	optdepends = gnome-terminal: GNOME terminal emulator
+	optdepends = konsole: KDE terminal emulator
+	provides = antigravity-cli
+	provides = agy
+	conflicts = antigravity-cli-bin
+	source_x86_64 = https://dl.google.com/dl/antigravity/cli/linux_amd64/agy-1.1.14.tar.gz
+	source_x86_64 = antigravity-cli.desktop
+	source_x86_64 = antigravity-cli-terminal.desktop
+	source_x86_64 = antigravity-cli.sh
+	source_aarch64 = https://dl.google.com/dl/antigravity/cli/linux_arm64/agy-1.1.14.tar.gz
+	source_aarch64 = antigravity-cli.desktop
+	source_aarch64 = antigravity-cli-terminal.desktop
+	source_aarch64 = antigravity-cli.sh
+	sha256sums_x86_64 = SKIP
+	sha256sums_x86_64 = SKIP
+	sha256sums_x86_64 = SKIP
+	sha256sums_x86_64 = SKIP
+	sha256sums_aarch64 = SKIP
+	sha256sums_aarch64 = SKIP
+	sha256sums_aarch64 = SKIP
+	sha256sums_aarch64 = SKIP
