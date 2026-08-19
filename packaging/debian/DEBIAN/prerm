@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Pre-removal script for antigravity-cli
+# Pre-removal script for antigravity (full suite)
 case "$1" in
     remove|upgrade|deconfigure)
         # Update icon cache

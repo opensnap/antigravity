@@ -1,9 +1,19 @@
 #!/bin/bash
 set -e
 
-# Post-installation script for antigravity-cli
+# Post-installation script for antigravity (full suite)
 case "$1" in
     configure)
+        # Fix chrome-sandbox permissions (Electron requirement)
+        for sandbox in \
+            /opt/antigravity/Antigravity-x64/chrome-sandbox \
+            /opt/antigravity-ide/Antigravity-IDE/chrome-sandbox; do
+            if [ -f "$sandbox" ]; then
+                chown root:root "$sandbox"
+                chmod 4755 "$sandbox"
+            fi
+        done
+
         # Update icon cache
         if command -v gtk-update-icon-cache >/dev/null 2>&1; then
             gtk-update-icon-cache -q /usr/share/icons/hicolor 2>/dev/null || true
@@ -15,15 +25,23 @@ case "$1" in
         fi
 
         echo ""
-        echo "Antigravity CLI has been installed!"
+        echo "Antigravity has been installed!"
+        echo ""
+        echo "Installed components:"
+        echo "  - Antigravity 2.0 Desktop: /usr/local/bin/antigravity"
+        echo "  - Antigravity IDE:         /usr/local/bin/antigravity-ide"
+        echo "  - Antigravity CLI (agy):   /usr/bin/agy"
         echo ""
         echo "Usage:"
-        echo "  agy              Start interactive CLI"
-        echo "  agy --help       Show help"
-        echo "  agy --version    Show version"
+        echo "  antigravity                Start Desktop 2.0"
+        echo "  antigravity-ide            Start IDE"
+        echo "  agy                        Start CLI"
         echo ""
-        echo "Desktop launcher has been installed."
-        echo "You can find 'Antigravity CLI' in your application menu."
+        echo "Update:"
+        echo "  sudo antigravity-linux update --all"
+        echo ""
+        echo "Uninstall:"
+        echo "  sudo dpkg -r antigravity"
         echo ""
         ;;
 esac

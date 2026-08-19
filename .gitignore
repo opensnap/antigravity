@@ -5,3 +5,5 @@
 /dist/
 /.cache/
 /.playwright-mcp/
+packaging/debian/build/
+*.deb

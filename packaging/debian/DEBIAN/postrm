@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Post-removal script for antigravity-cli
+# Post-removal script for antigravity (full suite)
 case "$1" in
     remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
         # Update icon cache
@@ -13,6 +13,10 @@ case "$1" in
         if command -v update-desktop-database >/dev/null 2>&1; then
             update-desktop-database /usr/share/applications 2>/dev/null || true
         fi
+
+        # Clean up any leftover directories
+        rm -rf /opt/antigravity.new /opt/antigravity.previous
+        rm -rf /opt/antigravity-ide.new /opt/antigravity-ide.previous
         ;;
 esac
 

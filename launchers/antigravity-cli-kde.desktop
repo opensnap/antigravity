@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Application
+Name=Antigravity CLI (Konsole)
+GenericName=AI Agent CLI
+Comment=Google Antigravity AI agent command-line interface (opens in Konsole)
+Exec=konsole -e agy
+Icon=antigravity-cli
+Terminal=false
+Categories=Development;IDE;Utility;
+MimeType=text/plain;
+Keywords=ai;agent;cli;google;antigravity;
+StartupNotify=true
+Actions=NewWindow;
+
+[Desktop Action NewWindow]
+Name=New Window
+Exec=konsole -e agy
