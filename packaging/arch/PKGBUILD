@@ -1,0 +1,94 @@
+# Maintainer: sandikodev <androxoss@hotmail.com>
+pkgname=antigravity
+pkgver=2.8.1
+pkgrel=1
+pkgdesc="Google Antigravity — AI agent platform (Desktop + IDE + CLI)"
+arch=('x86_64' 'aarch64')
+url="https://antigravity.google"
+license=('Apache-2.0')
+depends=('glibc' 'gcc-libs' 'python' 'curl' 'tar' 'ca-certificates')
+makedepends=()
+optdepends=(
+  'python-nautilus: Nautilus file manager integration'
+  'alacritty: Terminal emulator for CLI launcher'
+  'kitty: Alternative terminal emulator'
+  'gnome-terminal: GNOME terminal emulator'
+  'konsole: KDE terminal emulator'
+  'xfce4-terminal: XFCE terminal emulator'
+  'xterm: Fallback terminal emulator'
+)
+provides=('antigravity' 'antigravity-desktop' 'antigravity-ide' 'antigravity-cli' 'agy')
+conflicts=('antigravity-cli' 'antigravity-cli-bin')
+install=antigravity.install
+backup=()
+
+# Desktop 2.0 + IDE version
+_desktop_ver="${pkgver}"
+_cli_ver="1.1.14"
+
+# Source: Google official downloads
+source_x86_64=(
+  "https://storage.googleapis.com/antigravity-public/antigravity-hub/${_desktop_ver}/linux-x64/Antigravity.tar.gz::desktop.tar.gz"
+  "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/${_desktop_ver}/linux-x64/Antigravity%20IDE.tar.gz::ide.tar.gz"
+  "https://dl.google.com/dl/antigravity/cli/linux_amd64/agy-${_cli_ver}.tar.gz::agy.tar.gz"
+  "antigravity.desktop"
+  "antigravity-ide.desktop"
+  "antigravity-cli.desktop"
+  "antigravity-cli-terminal.desktop"
+  "antigravity-cli.sh"
+)
+source_aarch64=(
+  "https://storage.googleapis.com/antigravity-public/antigravity-hub/${_desktop_ver}/linux-arm/Antigravity.tar.gz::desktop.tar.gz"
+  "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/${_desktop_ver}/linux-arm/Antigravity%20IDE.tar.gz::ide.tar.gz"
+  "https://dl.google.com/dl/antigravity/cli/linux_arm64/agy-${_cli_ver}.tar.gz::agy.tar.gz"
+  "antigravity.desktop"
+  "antigravity-ide.desktop"
+  "antigravity-cli.desktop"
+  "antigravity-cli-terminal.desktop"
+  "antigravity-cli.sh"
+)
+
+sha256sums_x86_64=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums_aarch64=('SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP' 'SKIP')
+
+package() {
+  cd "${srcdir}"
+
+  # --- Desktop 2.0 ---
+  local desktop_dir
+  desktop_dir=$(ls -d Antigravity-* 2>/dev/null | head -1)
+  if [ -d "$desktop_dir" ]; then
+    install -dm755 "${pkgdir}/opt/antigravity"
+    cp -a "$desktop_dir" "${pkgdir}/opt/antigravity/"
+    ln -sf "/opt/antigravity/${desktop_dir}/antigravity" "${pkgdir}/usr/local/bin/antigravity"
+  fi
+
+  # --- IDE ---
+  if [ -d "Antigravity IDE" ]; then
+    install -dm755 "${pkgdir}/opt/antigravity-ide"
+    cp -a "Antigravity IDE" "${pkgdir}/opt/antigravity-ide/Antigravity-IDE"
+    ln -sf "/opt/antigravity-ide/Antigravity-IDE/antigravity-ide" "${pkgdir}/usr/local/bin/antigravity-ide"
+  fi
+
+  # --- CLI ---
+  install -Dm755 "agy" "${pkgdir}/usr/bin/agy"
+
+  # --- Desktop entries ---
+  install -Dm644 "antigravity.desktop" "${pkgdir}/usr/share/applications/antigravity.desktop"
+  install -Dm644 "antigravity-ide.desktop" "${pkgdir}/usr/share/applications/antigravity-ide.desktop"
+  install -Dm644 "antigravity-cli.desktop" "${pkgdir}/usr/share/applications/antigravity-cli.desktop"
+  install -Dm644 "antigravity-cli-terminal.desktop" "${pkgdir}/usr/share/applications/antigravity-cli-terminal.desktop"
+
+  # --- Shell profile ---
+  install -Dm644 "antigravity-cli.sh" "${pkgdir}/etc/profile.d/antigravity-cli.sh"
+
+  # --- Icons ---
+  if [ -f "${pkgdir}/opt/antigravity/${desktop_dir}/resources/app.asar" ]; then
+    install -Dm644 "${pkgdir}/opt/antigravity/${desktop_dir}/resources/app.asar" \
+      "${pkgdir}/usr/share/icons/hicolor/512x512/apps/antigravity.png" 2>/dev/null || true
+  fi
+  if [ -f "${pkgdir}/opt/antigravity-ide/Antigravity-IDE/resources/app/resources/linux/code.png" ]; then
+    install -Dm644 "${pkgdir}/opt/antigravity-ide/Antigravity-IDE/resources/app/resources/linux/code.png" \
+      "${pkgdir}/usr/share/icons/hicolor/512x512/apps/antigravity-ide.png"
+  fi
+}

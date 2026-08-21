@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Application
+Name=Antigravity CLI (Kitty)
+GenericName=AI Agent CLI
+Comment=Google Antigravity AI agent command-line interface (opens in Kitty, no title)
+Exec=kitty --class antigravity-cli agy
+Icon=antigravity-cli
+Terminal=false
+Categories=Development;IDE;Utility;
+MimeType=text/plain;
+Keywords=ai;agent;cli;google;antigravity;
+StartupNotify=true
+StartupWMClass=kitty
+Actions=NewWindow;
+
+[Desktop Action NewWindow]
+Name=New Window
+Exec=kitty --class antigravity-cli agy

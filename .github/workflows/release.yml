@@ -1,0 +1,202 @@
+name: Build & Release Antigravity
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      desktop_version:
+        description: 'Desktop/IDE version (e.g. 2.8.1)'
+        required: false
+        default: '2.8.1'
+      cli_version:
+        description: 'CLI version (e.g. 1.1.14)'
+        required: false
+        default: '1.1.14'
+
+env:
+  DESKTOP_VERSION: ${{ github.event.inputs.desktop_version || '' }}
+  CLI_VERSION: ${{ github.event.inputs.cli_version || '' }}
+
+jobs:
+  build-deb:
+    name: Build .deb (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [amd64, arm64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y dpkg-dev curl
+
+      - name: Detect versions
+        id: versions
+        run: |
+          if [ -n "${{ env.DESKTOP_VERSION }}" ]; then
+            echo "desktop=${{ env.DESKTOP_VERSION }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "desktop=${{ github.ref_name#v }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "desktop=2.8.1" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -n "${{ env.CLI_VERSION }}" ]; then
+            echo "cli=${{ env.CLI_VERSION }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "cli=1.1.14" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build .deb
+        run: |
+          cd packaging/debian
+          bash build-deb.sh \
+            ${{ steps.versions.outputs.desktop }} \
+            ${{ steps.versions.outputs.cli }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: antigravity-deb-${{ matrix.arch }}
+          path: packaging/debian/build/*.deb
+
+  build-tarball:
+    name: Build tarball (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+            google_arch: linux-x64
+            cli_arch: linux_amd64
+          - arch: aarch64
+            google_arch: linux-arm
+            cli_arch: linux_arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect versions
+        id: versions
+        run: |
+          if [ -n "${{ env.DESKTOP_VERSION }}" ]; then
+            echo "desktop=${{ env.DESKTOP_VERSION }}" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "desktop=${{ github.ref_name#v }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "desktop=2.8.1" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -n "${{ env.CLI_VERSION }}" ]; then
+            echo "cli=${{ env.CLI_VERSION }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "cli=1.1.14" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download and package
+        run: |
+          DESKTOP="${{ steps.versions.outputs.desktop }}"
+          CLI="${{ steps.versions.outputs.cli }}"
+          ARCH="${{ matrix.arch }}"
+          GARCH="${{ matrix.google_arch }}"
+          CARCH="${{ matrix.cli_arch }}"
+
+          STAGING="antigravity-${DESKTOP}-${ARCH}"
+          mkdir -p "$STAGING"
+
+          # Download Desktop
+          echo "Downloading Desktop ${DESKTOP}..."
+          curl -fsSL --retry 3 -o desktop.tar.gz \
+            "https://storage.googleapis.com/antigravity-public/antigravity-hub/${DESKTOP}/${GARCH}/Antigravity.tar.gz"
+          tar -xzf desktop.tar.gz -C "$STAGING/"
+          rm desktop.tar.gz
+
+          # Download IDE
+          echo "Downloading IDE..."
+          curl -fsSL --retry 3 -o ide.tar.gz \
+            "https://edgedl.me.gvt1.com/edgedl/release2/j0qc3/antigravity/stable/${DESKTOP}/${GARCH}/Antigravity%20IDE.tar.gz"
+          tar -xzf ide.tar.gz -C "$STAGING/"
+          rm ide.tar.gz
+
+          # Download CLI
+          echo "Downloading CLI ${CLI}..."
+          curl -fsSL --retry 3 -o cli.tar.gz \
+            "https://dl.google.com/dl/antigravity/cli/${CARCH}/agy-${CLI}.tar.gz"
+          tar -xzf cli.tar.gz -C "$STAGING/"
+          rm cli.tar.gz
+
+          # Include packaging files
+          cp packaging/arch/antigravity-cli.sh "$STAGING/"
+          cp packaging/arch/antigravity.desktop "$STAGING/"
+          cp packaging/arch/antigravity-ide.desktop "$STAGING/"
+          cp packaging/arch/antigravity-cli.desktop "$STAGING/"
+
+          tar -czf "${STAGING}.tar.gz" "$STAGING"
+          rm -rf "$STAGING"
+
+          echo "Built: ${STAGING}.tar.gz"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: antigravity-tar-${{ matrix.arch }}
+          path: antigravity-*.tar.gz
+
+  release:
+    name: Create GitHub Release
+    needs: [build-deb, build-tarball]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            antigravity-deb-amd64/*.deb
+            antigravity-deb-arm64/*.deb
+            antigravity-tar-x86_64/*.tar.gz
+            antigravity-tar-aarch64/*.tar.gz
+          body: |
+            ## Antigravity ${{ github.ref_name }}
+
+            Full suite: Desktop 2.0 + IDE + CLI (agy)
+
+            ### Quick Install
+
+            **Debian/Ubuntu (.deb):**
+            ```bash
+            # amd64
+            sudo dpkg -i antigravity_*_amd64.deb
+            sudo apt-get install -f
+
+            # arm64
+            sudo dpkg -i antigravity_*_arm64.deb
+            sudo apt-get install -f
+            ```
+
+            **Arch Linux (tarball):**
+            ```bash
+            tar -xzf antigravity-*-x86_64.tar.gz
+            cd antigravity-*/
+            sudo install -Dm755 */antigravity /opt/antigravity/*/antigravity
+            ```
+
+            **Arch Linux (AUR):**
+            ```bash
+            yay -S antigravity
+            ```
+
+            ### What's Included
+            - Antigravity 2.0 Desktop (Electron app)
+            - Antigravity IDE (code editor with AI)
+            - Antigravity CLI (`agy`)
+            - Desktop launchers (app menu)
+            - Nautilus integration (Open in IDE)
+            - Update helper: `sudo antigravity-linux update --all`

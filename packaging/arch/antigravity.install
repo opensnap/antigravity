@@ -1,0 +1,24 @@
+post_install() {
+  echo ""
+  echo "Antigravity has been installed!"
+  echo ""
+  echo "Installed components:"
+  echo "  - Antigravity 2.0 Desktop: /opt/antigravity/Antigravity-x64/antigravity"
+  echo "  - Antigravity IDE:         /opt/antigravity-ide/Antigravity-IDE/antigravity-ide"
+  echo "  - Antigravity CLI (agy):   /usr/bin/agy"
+  echo ""
+  echo "Usage:"
+  echo "  antigravity                Start Desktop 2.0"
+  echo "  antigravity-ide            Start IDE"
+  echo "  agy                        Start CLI"
+  echo ""
+  echo "Update:"
+  echo "  sudo antigravity-linux update --all"
+  echo ""
+}
+
+post_upgrade() {
+  echo ""
+  echo "Antigravity has been updated to ${pkgver}!"
+  echo ""
+}

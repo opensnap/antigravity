@@ -1,0 +1,27 @@
+Package: antigravity
+Version: 2.8.1-1
+Section: devel
+Priority: optional
+Architecture: amd64
+Depends: libc6 (>= 2.28), libstdc++6 (>= 12), python3, curl, tar, ca-certificates
+Recommends: python3-nautilus, alacritty | kitty | gnome-terminal | konsole | xfce4-terminal | xterm
+Suggests: alacritty
+Installed-Size: 524288
+Maintainer: sandikodev <androxoss@hotmail.com>
+Homepage: https://antigravity.google
+Description: Google Antigravity — AI agent platform (Desktop + IDE + CLI)
+ Antigravity is Google's AI agent platform. This package provides all
+ three components:
+ .
+  - Antigravity 2.0 Desktop app (Electron-based)
+  - Antigravity IDE (code editor with AI agent integration)
+  - Antigravity CLI (agy) — command-line interface
+ .
+ Features:
+  - Interactive AI agent sessions and multi-turn conversations
+  - Tool permission management and workspace integration
+  - Model selection and configuration
+  - Nautilus file manager integration (Open in IDE)
+ .
+ Desktop launchers are installed automatically.
+ Update via: sudo antigravity-linux update --all

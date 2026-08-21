@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Antigravity IDE
+Comment=Google Antigravity IDE
+Exec=/opt/antigravity-ide/Antigravity-IDE/antigravity-ide %F
+Icon=antigravity-ide
+Terminal=false
+Type=Application
+Categories=Development;IDE;
+MimeType=inode/directory;text/plain;application/x-code-workspace;application/x-antigravity-workspace;x-scheme-handler/antigravity-ide;
+StartupNotify=true
+StartupWMClass=antigravity-ide
