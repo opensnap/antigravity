@@ -2,13 +2,28 @@
 # build-deb.sh — Build .deb package for Antigravity (Desktop + IDE + CLI)
 # Resolves URLs dynamically from Google's download page and CLI manifest.
 # Supports: amd64, arm64
-# Usage: bash build-deb.sh
+# Usage: bash build-deb.sh [--fast]
+#   --fast  Skip Electron locales/debug to reduce build time on slow mounts
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PKG_NAME="antigravity"
 DOWNLOAD_PAGE="https://antigravity.google/download"
 CLI_MANIFEST_BASE="https://antigravity-cli-auto-updater-974169037036.us-central1.run.app/manifests"
+FAST_MODE=false
+[[ "${1:-}" == "--fast" ]] && FAST_MODE=true
+
+# Build in /tmp to avoid SSHFS timeouts; fall back to SCRIPT_DIR/build if /tmp is too small
+BUILD_ROOT="/tmp/antigravity-build-$$"
+if [ -d /tmp ] && [ -w /tmp ]; then
+  local_free=$(df -BM /tmp 2>/dev/null | awk 'NR==2{print $4}' | tr -d 'M')
+  if [ "${local_free:-0}" -lt 4000 ]; then
+    warn "/tmp has only ${local_free:-?}MB free, using ${SCRIPT_DIR}/build"
+    BUILD_ROOT="${SCRIPT_DIR}/build"
+  fi
+else
+  BUILD_ROOT="${SCRIPT_DIR}/build"
+fi
 
 # Colors
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; NC='\033[0m'
@@ -109,9 +124,10 @@ main() {
   command -v python3 >/dev/null 2>&1 || err "python3 not found."
   command -v tar >/dev/null 2>&1 || err "tar not found."
 
-  rm -rf "${SCRIPT_DIR}/build"
-  local work_dir="${SCRIPT_DIR}/build/work"
-  local pkg_dir="${SCRIPT_DIR}/build/${PKG_NAME}"
+  rm -rf "${BUILD_ROOT}" "${SCRIPT_DIR}/build"
+  mkdir -p "${SCRIPT_DIR}/build"
+  local work_dir="${BUILD_ROOT}/work"
+  local pkg_dir="${BUILD_ROOT}/${PKG_NAME}"
   mkdir -p "$work_dir" "${pkg_dir}/DEBIAN"
 
   # --- Resolve URLs ---
@@ -165,21 +181,47 @@ main() {
   # --- Assemble package ---
   log "Assembling package..."
 
+  # Helper: fast copy (rsync if available, else cp)
+  fast_copy() {
+    if command -v rsync >/dev/null 2>&1; then
+      rsync -a --info=progress2 "$@"
+    else
+      cp -a "$@"
+    fi
+  }
+
+  # Helper: strip Electron bloat for --fast mode
+  strip_electron() {
+    local dir="$1"
+    if $FAST_MODE; then
+      # Remove locales (keep only en-US), debug symbols, crashpad
+      rm -rf "${dir}/locales/"!(en-US.pak) 2>/dev/null || true
+      rm -rf "${dir}/debug" "${dir}/.debug" 2>/dev/null || true
+      rm -rf "${dir}/Crashpad" 2>/dev/null || true
+      # Remove unused SwiftShader
+      rm -rf "${dir}/swiftshader" 2>/dev/null || true
+      log "  Stripped Electron bloat from $(basename "$dir")"
+    fi
+  }
+
   # Desktop 2.0
   local desktop_top
   desktop_top=$(basename "$desktop_dir")
-  # Extract version from URL (format: antigravity-hub/2.8.1-6512087774658560/...)
   local desktop_ver
   desktop_ver=$(echo "$desktop_url" | grep -oP 'antigravity-hub/\K[^/]+' | cut -d- -f1)
   [ -z "$desktop_ver" ] && desktop_ver="0.0.0"
   log "  Version: ${desktop_ver}"
 
   mkdir -p "${pkg_dir}/opt/antigravity"
-  cp -a "$desktop_dir" "${pkg_dir}/opt/antigravity/"
+  log "  Copying Desktop 2.0..."
+  fast_copy "$desktop_dir" "${pkg_dir}/opt/antigravity/"
+  strip_electron "${pkg_dir}/opt/antigravity/${desktop_top}"
 
   # IDE
   mkdir -p "${pkg_dir}/opt/antigravity-ide"
-  cp -a "${work_dir}/Antigravity IDE" "${pkg_dir}/opt/antigravity-ide/Antigravity-IDE"
+  log "  Copying IDE..."
+  fast_copy "${work_dir}/Antigravity IDE" "${pkg_dir}/opt/antigravity-ide/Antigravity-IDE"
+  strip_electron "${pkg_dir}/opt/antigravity-ide/Antigravity-IDE"
 
   # CLI
   mkdir -p "${pkg_dir}/usr/bin"
@@ -273,7 +315,16 @@ PROFILE
   # --- Build .deb ---
   local deb_name="${PKG_NAME}_${desktop_ver}-1_${arch}.deb"
   log "Building ${deb_name}..."
-  dpkg-deb --build "${pkg_dir}" "${SCRIPT_DIR}/build/${deb_name}"
+
+  # If building in /tmp, copy back to SCRIPT_DIR/build for persistence
+  if [ "$BUILD_ROOT" != "${SCRIPT_DIR}/build" ]; then
+    log "  Building in local /tmp (fast)..."
+    dpkg-deb --build "${pkg_dir}" "${BUILD_ROOT}/${deb_name}"
+    cp "${BUILD_ROOT}/${deb_name}" "${SCRIPT_DIR}/build/${deb_name}"
+    log "  Copied to ${SCRIPT_DIR}/build/${deb_name}"
+  else
+    dpkg-deb --build "${pkg_dir}" "${SCRIPT_DIR}/build/${deb_name}"
+  fi
 
   log ""
   log "Package built successfully!"
@@ -284,6 +335,9 @@ PROFILE
   log "  Desktop 2.0: ${desktop_ver}"
   log "  IDE:         (same release)"
   log "  CLI (agy):   ${cli_ver}"
+  if $FAST_MODE; then
+    log "  Mode:        fast (stripped locales/debug/swiftshader)"
+  fi
   log ""
   log "Install:"
   log "  sudo dpkg -i ${SCRIPT_DIR}/build/${deb_name}"

@@ -590,6 +590,26 @@ sudo dpkg -i antigravity_*_amd64.deb
 sudo apt-get install -f
 ```
 
+**Build locally:**
+```bash
+cd packaging/debian
+bash build-deb.sh          # Full build
+bash build-deb.sh --fast   # Fast build (strips Electron bloat)
+```
+
+**Cross-Distro Test Results:**
+
+| Distro | Result |
+|---|---|
+| Ubuntu 24.04 (Noble) | FULL PASS |
+| Ubuntu 22.04 (Jammy) | FULL PASS |
+| Debian 12 (Bookworm) | FULL PASS |
+| Debian 13 (Trixie) | FULL PASS |
+| Linux Mint 22 | FULL PASS |
+| Fedora 40 | Structure VALID (RPM-based) |
+
+See: `packaging/debian/DISTRO-TEST-REPORT.md`
+
 ### 6.2 Arch Linux Package (`PKGBUILD`) — Full Suite
 
 See: `packaging/arch/`
@@ -721,12 +741,27 @@ Exec=alacritty -e agy
 ### Phase 5: Production Readiness ✅ COMPLETE
 
 - [x] `build-deb.sh` — multi-arch (amd64/arm64), auto-version, retry logic, color output
+- [x] `build-deb.sh --fast` mode — strips Electron bloat (locales, debug, swiftshader)
+- [x] `build-deb.sh` — builds in `/tmp` to avoid SSHFS timeouts
 - [x] `PKGBUILD` — both architectures, backup array, optdepends
 - [x] GitHub Actions workflow (`.github/workflows/release.yml`) — auto-build on tag push
 - [x] Packaging READMEs with download from GitHub Releases
-- [x] Test suite: 299 tests, 0 failures, portable (auto-detects host)
+- [x] Test suite: 284 tests, 0 failures, portable (auto-detects host)
+- [x] GitHub Release v2.8.1 — .deb uploaded (341MB)
 
-### Phase 6: Awaiting Review
+### Phase 6: Cross-Distro Testing ✅ COMPLETE
+
+- [x] Docker CE 29.7.2 installed on Research-01
+- [x] Ubuntu 24.04 — FULL PASS (CLI, Desktop, IDE, entries, icons, symlinks)
+- [x] Ubuntu 22.04 — FULL PASS
+- [x] Debian 12 (Bookworm) — FULL PASS
+- [x] Debian 13 (Trixie) — FULL PASS
+- [x] Linux Mint 22 — FULL PASS
+- [x] Fedora 40 — Package structure VALID (RPM-based, no dpkg)
+- [x] Binary compatibility: glibc >= 2.28 satisfied by all tested distros
+- [x] Test report: `packaging/debian/DISTRO-TEST-REPORT.md`
+
+### Phase 7: Awaiting Review
 
 - [ ] Maintainer review of PR #4 (install script fix)
 - [ ] Maintainer review of PR #6 (packaging contribution)
