@@ -48,28 +48,28 @@ This project does **not** mirror, modify, or redistribute Google Antigravity. Th
 Install Antigravity 2.0 and the IDE:
 
 ```bash
-INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+INSTALLER_URL="https://quitearpit.github.io/antigravity-linux/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 ```
 
 Install only Antigravity 2.0 desktop app:
 
 ```bash
-INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+INSTALLER_URL="https://quitearpit.github.io/antigravity-linux/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s --
 ```
 
 Install only Antigravity IDE:
 
 ```bash
-INSTALLER_URL="https://opensnap.github.io/antigravity/install.sh"
+INSTALLER_URL="https://quitearpit.github.io/antigravity-linux/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --ide
 ```
 
 ## Quick install from raw GitHub
 
 ```bash
-INSTALLER_URL="https://raw.githubusercontent.com/opensnap/antigravity/main/install.sh"
+INSTALLER_URL="https://raw.githubusercontent.com/QuiteArpit/antigravity-linux/main/install.sh"
 curl -fsSL "$INSTALLER_URL" | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL="$INSTALLER_URL" bash -s -- --all
 ```
 
@@ -154,24 +154,28 @@ The uninstall removes helper-managed files from `/opt`, `/usr/local/bin`, `/usr/
 
 ## Supported systems
 
-Designed for Debian/Ubuntu-based distributions with `apt-get`.
+Designed for modern Linux distributions (glibc >= 2.28):
 
-The script can also run on other Linux distributions if the required tools already exist:
+- **Debian / Ubuntu / Linux Mint / Pop!_OS** (`apt-get`)
+- **Fedora / RHEL / CentOS Stream / Rocky Linux** (`dnf`)
+- **Arch Linux / openSUSE / other distributions** (requires manual installation of prerequisites)
 
-- `bash`
-- `curl`
-- `tar`
-- `python3`
-- `desktop-file-utils`
-- `xdg-utils`
+### Automatic Dependency Management
 
-GNOME Files/Nautilus integration additionally needs `python3-nautilus`.
+On supported package managers, the installer checks for missing tools and installs them automatically (unless `--no-apt` is passed):
+
+- **Debian/Ubuntu (`apt-get`)**: `ca-certificates`, `curl`, `tar`, `python3`, `desktop-file-utils`, `xdg-utils`, and `python3-nautilus` (optional).
+- **Fedora/RHEL (`dnf`)**: `ca-certificates`, `curl`, `tar`, `python3`, `desktop-file-utils`, `xdg-utils`, and `nautilus-python` (optional).
+
+On other Linux distributions, ensure the following core tools are installed:
+
+- `bash`, `curl`, `tar`, `python3`, `desktop-file-utils`, `xdg-utils`
 
 ## GitHub Pages setup
 
 This repository includes a GitHub Actions workflow at `.github/workflows/pages.yml` that deploys the `docs/` directory to GitHub Pages.
 
-1. Use this repository, `opensnap/antigravity`, or fork it under your own account.
+1. Use this repository, `QuiteArpit/antigravity-linux`, or fork it under your own account.
 2. Push your changes to the `main` branch.
 3. Open **Settings → Pages**.
 4. Set **Build and deployment → Source** to **GitHub Actions**.
@@ -179,7 +183,7 @@ This repository includes a GitHub Actions workflow at `.github/workflows/pages.y
 6. Your installer will be available at:
 
 ```text
-https://opensnap.github.io/antigravity/install.sh
+https://quitearpit.github.io/antigravity-linux/install.sh
 ```
 
 ## Local development
@@ -187,8 +191,8 @@ https://opensnap.github.io/antigravity/install.sh
 Clone the repository:
 
 ```bash
-git clone https://github.com/opensnap/antigravity.git
-cd antigravity
+git clone https://github.com/QuiteArpit/antigravity-linux.git
+cd antigravity-linux
 ```
 
 Run local checks:
@@ -216,7 +220,7 @@ This installer uses `sudo` because it installs system-wide files under `/opt`, `
 For safer review before running:
 
 ```bash
-curl -fsSL "https://opensnap.github.io/antigravity/install.sh" -o install.sh
+curl -fsSL "https://quitearpit.github.io/antigravity-linux/install.sh" -o install.sh
 less install.sh
 sudo bash install.sh --all
 ```
@@ -227,11 +231,13 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 > Read the [contributing guidelines](CONTRIBUTING.md) for more information.
 
-The easiest way to contribute is to check whether this works smoothly on your OS and if any issues arise, [open an issue](https://github.com/opensnap/antigravity/issues/new), describe the problem, your system details, and screenshots (if possible).
+The easiest way to contribute is to check whether this works smoothly on your OS and if any issues arise, [open an issue](https://github.com/QuiteArpit/antigravity-linux/issues/new), describe the problem, your system details, and screenshots (if possible).
 
 ### Currently Confirmed OSes
 
-- Ubuntu 24 (LTS)
+- Ubuntu 24.04 LTS & 26.04
+- Debian 12 / 13
+- Fedora 40 / 41 / 42 / 43 / 44 (KDE Plasma & GNOME)
 
 ## License
 

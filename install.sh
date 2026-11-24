@@ -102,31 +102,63 @@ require_root_or_reexec() {
     return 0
   fi
   if command -v sudo >/dev/null 2>&1 && [ -n "${BASH_SOURCE[0]:-}" ] && [ -r "${BASH_SOURCE[0]}" ] && [ "${BASH_SOURCE[0]}" != "bash" ] && [ "${BASH_SOURCE[0]}" != "sh" ]; then
-    exec sudo -E env "ANTIGRAVITY_LINUX_INSTALLER_URL=$INSTALLER_URL" bash "${BASH_SOURCE[0]}" "${ORIGINAL_ARGS[@]}"
+    exec sudo -E env "ANTIGRAVITY_LINUX_INSTALLER_URL=$INSTALLER_URL" bash "${BASH_SOURCE[0]}" ${ORIGINAL_ARGS[@]+"${ORIGINAL_ARGS[@]}"}
   fi
   err "System-wide install needs root. Use: curl -fsSL <installer-url> | sudo -E env ANTIGRAVITY_LINUX_INSTALLER_URL=<installer-url> bash"
 }
 
-install_deps_debian() {
+install_deps() {
   [ "$INSTALL_DEPS" -eq 1 ] || return 0
   if command -v apt-get >/dev/null 2>&1; then
-    export DEBIAN_FRONTEND=noninteractive
-    apt-get update
     local packages=(ca-certificates curl tar python3 desktop-file-utils xdg-utils)
     if [ "$INSTALL_NAUTILUS" -eq 1 ] && [ "$INSTALL_IDE" -eq 1 ]; then
       packages+=(python3-nautilus)
     fi
-    apt-get install -y "${packages[@]}"
+    local missing=()
+    for pkg in "${packages[@]}"; do
+      if ! dpkg -s "$pkg" >/dev/null 2>&1; then
+        missing+=("$pkg")
+      fi
+    done
+    if [ ${#missing[@]} -gt 0 ]; then
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update
+      apt-get install -y "${missing[@]}"
+    fi
+  elif command -v dnf >/dev/null 2>&1; then
+    local packages=(ca-certificates curl tar python3 desktop-file-utils xdg-utils)
+    if [ "$INSTALL_NAUTILUS" -eq 1 ] && [ "$INSTALL_IDE" -eq 1 ] && command -v nautilus >/dev/null 2>&1; then
+      packages+=(nautilus-python)
+    fi
+    local missing=()
+    for pkg in "${packages[@]}"; do
+      if ! rpm -q "$pkg" >/dev/null 2>&1; then
+        missing+=("$pkg")
+      fi
+    done
+    if [ ${#missing[@]} -gt 0 ]; then
+      dnf install -y "${missing[@]}"
+    fi
   else
     for c in curl tar python3; do need "$c"; done
   fi
 }
 
-resolve_main_bundle() {
+resolve_download_source() {
   local tmpdir="$1"
   local html="$tmpdir/download.html"
   local js="$tmpdir/download.js"
   curl -fsSL --compressed --retry 3 -o "$html" "$DOWNLOAD_PAGE"
+
+  # Google's download page may embed tarball URLs directly in the HTML
+  # (current Astro-based layout) or inside a separate JS bundle (older layout).
+  # Try the HTML first; fall back to downloading a JS bundle if needed.
+  if grep -qP 'https?://[^"'\''<>\s)]+/linux-(x64|arm)/[^"'\''<>\s)]+\.tar\.gz' "$html"; then
+    cp "$html" "$js"
+    printf '%s\n' "$js"
+    return 0
+  fi
+
   local main_js_url
   main_js_url=$(python3 - "$html" "$DOWNLOAD_PAGE" <<'PY'
 import re, sys
@@ -144,6 +176,12 @@ print(urljoin(page, matches[-1]))
 PY
 )
   curl -fsSL --compressed --retry 3 -o "$js" "$main_js_url"
+
+  # If this JS bundle has no tarball URLs, fall back to searching the HTML.
+  if ! grep -qP 'https?://[^"'\''<>\s)]+/linux-(x64|arm)/[^"'\''<>\s)]+\.tar\.gz' "$js"; then
+    cp "$html" "$js"
+  fi
+
   printf '%s\n' "$js"
 }
 
@@ -174,23 +212,26 @@ def version_from_url(url):
     return 'unknown'
 
 if product == 'desktop':
-    marker = 'id:"antigravity-2"'
-    next_marker = 'id:"antigravity-cli"'
+    # Support both JS-object notation (id:"antigravity-2") and HTML attribute (id="antigravity-2").
+    markers      = ['id:"antigravity-2"',   'id="antigravity-2"']
+    next_markers = ['id:"antigravity-cli"',  'id="antigravity-cli"']
     filename_patterns = [r'Antigravity\.tar\.gz']
     label = 'Antigravity 2.0'
 elif product == 'ide':
-    marker = 'id:"antigravity-ide"'
-    next_marker = 'id:"antigravity-sdk"'
+    markers      = ['id:"antigravity-ide"',  'id="antigravity-ide"']
+    next_markers = ['id:"antigravity-sdk"',  'id="antigravity-sdk"']
     filename_patterns = [r'Antigravity%20IDE\.tar\.gz', r'Antigravity\+IDE\.tar\.gz', r'Antigravity IDE\.tar\.gz']
     label = 'Antigravity IDE'
 else:
     fail(f'Unknown product: {product}')
 
 sections = []
-start = text.find(marker)
-if start != -1:
-    end = text.find(next_marker, start)
-    sections.append(text[start:end if end != -1 else None])
+for marker, next_marker in zip(markers, next_markers):
+    start = text.find(marker)
+    if start != -1:
+        end = text.find(next_marker, start)
+        sections.append(text[start:end if end != -1 else None])
+        break
 sections.append(text)
 
 for section in sections:
@@ -489,11 +530,12 @@ print_status() {
 print_downloads() {
   need curl
   need python3
-  local tmp_parent="${TMPDIR:-/tmp}"
+  local tmp_parent="${TMPDIR:-/var/tmp}"
   local tmpdir
   tmpdir=$(mktemp -d "$tmp_parent/$PROJECT_NAME.XXXXXX")
+  trap 'rm -rf "${tmpdir:-}"' RETURN
   local js
-  js=$(resolve_main_bundle "$tmpdir")
+  js=$(resolve_download_source "$tmpdir")
   if [ "$INSTALL_DESKTOP" -eq 1 ]; then
     local version url
     read -r version url < <(resolve_desktop_download "$js")
@@ -504,7 +546,6 @@ print_downloads() {
     read -r version url < <(resolve_ide_download "$js")
     log "Antigravity IDE $version: $url"
   fi
-  rm -rf "$tmpdir"
 }
 
 print_success_summary() {
@@ -559,14 +600,14 @@ main() {
   fi
 
   require_root_or_reexec
-  install_deps_debian
+  install_deps
   local tmp_parent="${TMPDIR:-/var/tmp}"
   mkdir -p "$tmp_parent"
   local tmpdir
   tmpdir=$(mktemp -d "$tmp_parent/$PROJECT_NAME.XXXXXX")
-  trap 'rm -rf "$tmpdir"' EXIT
+  trap 'rm -rf "${tmpdir:-}"' EXIT
   local js
-  js=$(resolve_main_bundle "$tmpdir")
+  js=$(resolve_download_source "$tmpdir")
   [ "$INSTALL_DESKTOP" -eq 1 ] && install_desktop_app "$tmpdir" "$js"
   [ "$INSTALL_IDE" -eq 1 ] && install_ide_app "$tmpdir" "$js"
   install_nautilus_extension

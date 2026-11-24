@@ -4,7 +4,7 @@ Thanks for helping improve Antigravity Linux Installer.
 
 ## Easy way
 
-The easiest way to contribute is to checking if this smoothy works on your OS and if any issues arise, [open an issue](https://github.com/opensnap/antigravity/issues/new), describe the problem, your system details, and screenshots (if possible).
+The easiest way to contribute is to checking if this smoothy works on your OS and if any issues arise, [open an issue](https://github.com/QuiteArpit/antigravity-linux/issues/new), describe the problem, your system details, and screenshots (if possible).
 
 ## Development workflow
 
