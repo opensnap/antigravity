@@ -127,6 +127,10 @@ resolve_main_bundle() {
   local html="$tmpdir/download.html"
   local js="$tmpdir/download.js"
   curl -fsSL --compressed --retry 3 -o "$html" "$DOWNLOAD_PAGE"
+  if grep -Eq 'Antigravity(\.tar\.gz|(%20|\+| )IDE\.tar\.gz)' "$html"; then
+    printf '%s\n' "$html"
+    return 0
+  fi
   local main_js_url
   main_js_url=$(python3 - "$html" "$DOWNLOAD_PAGE" <<'PY'
 import re, sys
@@ -564,7 +568,8 @@ main() {
   mkdir -p "$tmp_parent"
   local tmpdir
   tmpdir=$(mktemp -d "$tmp_parent/$PROJECT_NAME.XXXXXX")
-  trap 'rm -rf "$tmpdir"' EXIT
+  CLEANUP_TMPDIR="$tmpdir"
+  trap 'rm -rf "${CLEANUP_TMPDIR:-}"' EXIT
   local js
   js=$(resolve_main_bundle "$tmpdir")
   [ "$INSTALL_DESKTOP" -eq 1 ] && install_desktop_app "$tmpdir" "$js"
